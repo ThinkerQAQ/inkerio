@@ -5,6 +5,7 @@ import config from "../../site.config.json";
 export const SITE = {
   title: config.title,
   homeTitle: config.homeTitle,
+  homeTitleEn: config.homeTitleEn,
   description: config.description,
   author: config.author,
   icpRecord: config.icpRecord,
