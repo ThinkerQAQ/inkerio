@@ -1,54 +1,36 @@
-# 设置自己的站点
+# 个性化站点（不修改引擎源码）
 
-仓库当前保存的是作者个人站点的配置。本地运行示例不必先修改；正式发布自己的站点时，需要检查下列设置。目前没有一个环境变量可以统一替换全部站点身份。
+Inkerio 自带的 [site.config.json](../../../site.config.json) 只包含**虚构演示值**。真实域名、身份、备案信息、图标、站长验证文件和集成配置应由个人网站部署仓库维护，而不是直接改通用引擎。
 
-## 名称、域名与联系方式
+## 网站身份与 Canonical
 
-在**引擎仓库**中修改：
+在部署仓库准备自己的 `site.config.json`，构建时复制到 Inkerio 引擎根目录。主要字段：
 
-| 文件 | 需要修改的内容 |
+| 字段 | 用途 |
 | --- | --- |
-| [`src/config/site.ts`](../../../src/config/site.ts) | `SITE.title`、`homeTitle`、`description`、`author`、`url`、`github`、`profiles`、`repository`、`contactEmail`、`alternateNames` |
-| [`src/config/i18n.ts`](../../../src/config/i18n.ts) | 中英文 `homeTitle`、首页无障碍标签，以及 About、Search 等含作者身份的描述 |
-| [`astro.config.mjs`](../../../astro.config.mjs) | `site`，与 `SITE.url` 使用同一个 HTTPS 站点源地址 |
-| 内容仓库 `src/content/pages/about.md`、`src/content/pages/en/about.md` | About 中英文正文、版权与使用说明、简介及 SEO 摘要；Inkerio 只负责渲染 |
-| [`public/`](../../../public/) | 自己的图标、域名及站长验证文件等站点资源 |
+| `title`、`homeTitle`、`homeTitleEn` | 网站名称及双语首页标题 |
+| `description`、`author`、`authorProfilePath` | SEO 和作者信息 |
+| `url` | HTTPS 站点源地址，统一用于 Astro 和结构化数据 |
+| `github`、`profiles`、`repository` | 公开社交与代码仓库链接 |
+| `contactEmail` | 联系邮箱，可留空 |
+| `icpRecord`、`publicSecurityRecord` | 可选备案信息，默认留空 |
+| `commentsRepository` | utterances 评论仓库，留空时关闭评论 |
 
-同时删除或替换 `SITE` 中的 `icpRecord`、`icpLookupUrl`、`publicSecurityRecord`、`publicSecurityLookupUrl`。它们对应作者的个人站点，应按自己站点的实际情况填写，不能直接沿用。
+[Astro 配置](../../../astro.config.mjs)及[站点模块](../../../src/config/site.ts)都读取该 JSON，常规身份配置不再要求编辑引擎内部 TS 代码。通用 UI 文案仍位于[国际化配置](../../../src/config/i18n.ts)，需要结构性文案修改时再考虑上游改进。
 
-搜索引擎代码中的 `ThinkerQAQ` 和 `thinkerqaq.com`，逐项检查剩余引用：指向 Inkerio 上游源码的链接可以保留，标识自己网站的值需要替换。不要全局替换依赖名或 Go import 路径。
+## 内容与图片
 
-## 评论、统计与反馈
+真实文章、笔记、About、项目、摄影和版权政策属于独立内容库。用 `node scripts/assemble-content.mjs --content-root ../your-content` 装配内容，版权政策以内容仓库的 `src/content/site/copyright.json` 为准。个人头像、Logo、站长验证文件由部署仓库注入；引擎自带图标只是演示。
 
-| 功能 | 配置位置 | 验证方式 |
-| --- | --- | --- |
-| utterances 评论 | `src/config/site.ts` 的 `COMMENTS.repository`、`label`、`theme`，以及自己 GitHub Issues 仓库的 utterances 安装 | 打开文章讨论区，确认链接指向自己的仓库 |
-| Umami | `PUBLIC_UMAMI_WEBSITE_ID`、`PUBLIC_UMAMI_PROXY_ORIGIN` | 检查 `/u.js` 和上报请求，再看自己的 Dashboard |
-| 有帮助/点赞 | `PUBLIC_REACTION_WORKER_URL` | 部署[自己的 Reactions Worker](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-reactions/README.md)，检查计数 |
-| AI 问答 | 可选 Worker 配置与前端挂载 | 参照 [Worker 说明](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-ai/README.md)；仓库当前关闭聊天入口 |
+## 可选集成
 
-评论组件挂载后会尝试加载 utterances，没有通用的 `enabled` 开关。不需要评论时，移除对应组件挂载；需要时配置自己的仓库。统计和反馈的构建变量留空可以关闭对应集成，Fork 时不要保留作者的站点 ID。
+- 评论：配置 `commentsRepository`；留空时不渲染 utterances 评论区。
+- Umami：使用 `PUBLIC_UMAMI_WEBSITE_ID`、`PUBLIC_UMAMI_PROXY_ORIGIN`；站点专用 `public/u.js` 应由部署仓库提供，引擎不分发此资源。
+- 点赞：`PUBLIC_REACTION_WORKER_URL` 指向自己的 Worker。
+- AI：作为可选外部服务，通用引擎不负责部署。
 
-本地变量可通过终端或 Astro 本地环境文件设置，部署时在构建环境配置对应值。静态站点的构建变量变化后，需要重新构建。
+BlogCTL 是[独立的内容分发工具](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl)，其 Canonical 与外部平台配置要另行检查，不能假定与网站的 `site.config.json` 自动同步。
 
-## 根路径托管与部署
+## 验证
 
-页面和媒体使用 `/articles/`、`/media/` 等站点根路径。建议部署到根域名、自定义域名或 `https://YOUR_USER.github.io/` 用户主页。若使用 `/REPOSITORY/` 下的项目 Pages 地址，需要另外检查根路径链接和 Astro `base`；只改 `site` 不能让整个站点支持子路径。
-
-使用 BlogCTL 提交索引时，还要单独更新 `[search]`。它指定要提交的线上站点，不会修改网站的构建配置。详见 [BlogCTL 配置](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/zh-CN/reference/configuration.md)。
-
-## 发布前检查
-
-装配自己的内容，运行 `npm run check`、`npm run build` 和 `npm run preview`。检查首页标题、关于页、页脚、文章 canonical、语言切换、`rss.xml`、`sitemap-index.xml`、评论和统计，并在 `dist/` 中搜索旧域名，确认剩余网站链接符合预期。
-
-## 站外分发域名
-
-BlogCTL 目前使用 `tools/blogctl/compiler/markdown.go` 的 `SiteOrigin` 常量生成 canonical 和根路径链接。修改上述站点配置或索引 `[search]` 不会同步改变它。Fork 用于自己的站外分发前，需要调整并检查编译后的链接，同时配置自己的 R2 素材存储；作者公开素材地址不代表拥有上传权限。
-
-## 内容驱动的 About 与版权声明
-
-About 的中英文内容保存在内容仓库 `src/content/pages/about.md` 和 `src/content/pages/en/about.md`。frontmatter 包含 `title`、`description`、`seoDescription`、`language`；正文普通 Markdown，工程只加载并渲染，保持 `/about/` 和 `/en/about/` 路由、SEO 与结构化数据。
-
-版权的**权威文案**存放于内容仓库 `src/content/site/copyright.json`，中文键 `zh`、英文键 `en`。每种语言包含 `title`、`notice`、`photo`、`syndication`、`source`。组合构建时由现有站点装配流程拷贝到引擎 `src/content/`，渲染文章、笔记、生活记录与生活首页时使用该文件。About 中的「版权与使用」是说明性摘要，应与 JSON 的授权规则保持一致。
-
-BlogCTL 在文章编译阶段通过配置的 `content_root` 读取同一个 JSON；修改文案后新编译的文章即可生效，**无需重新打包 BlogCTL**。为兼容旧版内容库，文件不存在时暂时使用内置旧声明；文件存在但 JSON 格式或必填字段错误时拒绝编译，以免发布错误授权说明。历史分发文章不会自动重写。内容库里的 About 两种语言文件必须同时存在，否则构建报错，不静默回退到引擎硬编码文案。
+装配自己的内容后执行 `npm run check`、`npm run build`，检查 `dist/` 中的域名、双语链接、RSS、Sitemap、About、版权、头像和可选服务。不要将真实内容或密钥提交回 Inkerio。部署流程见[部署指南](deploy.md)。
