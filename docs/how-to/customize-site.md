@@ -13,7 +13,7 @@ Prepare a site-specific `site.config.json` and copy it to the Inkerio engine roo
 | `url` | HTTPS canonical origin, used by Astro and structured data |
 | `github`, `profiles`, `repository` | Public identity links and repository |
 | `contactEmail` | Optional contact address |
-| `icpRecord`, `publicSecurityRecord` | Optional local registration records (empty by default) |
+| `icpRecord`, `publicSecurityRecord`, `publicSecurityIcon` | Optional registration details and an emblem icon (empty by default) |
 | `commentsRepository` | Optional utterances GitHub repository (empty disables comments) |
 
 Both [Astro configuration](../../astro.config.mjs) and [site identity module](../../src/config/site.ts) read this JSON. There is no need to edit original engine files for routine site identity changes.

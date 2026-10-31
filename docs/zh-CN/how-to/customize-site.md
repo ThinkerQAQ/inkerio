@@ -13,7 +13,7 @@ Inkerio 自带的 [site.config.json](../../../site.config.json) 只包含**虚�
 | `url` | HTTPS 站点源地址，统一用于 Astro 和结构化数据 |
 | `github`、`profiles`、`repository` | 公开社交与代码仓库链接 |
 | `contactEmail` | 联系邮箱，可留空 |
-| `icpRecord`、`publicSecurityRecord` | 可选备案信息，默认留空 |
+| `icpRecord`、`publicSecurityRecord`、`publicSecurityIcon` | 可选备案信息和图标，默认留空 |
 | `commentsRepository` | utterances 评论仓库，留空时关闭评论 |
 
 [Astro 配置](../../../astro.config.mjs)及[站点模块](../../../src/config/site.ts)都读取该 JSON，常规身份配置不再要求编辑引擎内部 TS 代码。通用 UI 文案仍位于[国际化配置](../../../src/config/i18n.ts)，需要结构性文案修改时再考虑上游改进。

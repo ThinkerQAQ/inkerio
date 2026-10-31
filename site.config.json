@@ -16,5 +16,6 @@
   "repository": "https://github.com/ThinkerQAQ/inkerio",
   "contactEmail": "",
   "locale": "zh-CN",
-  "commentsRepository": ""
+  "commentsRepository": "",
+  "publicSecurityIcon": ""
 }

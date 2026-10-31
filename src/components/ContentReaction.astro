@@ -1,5 +1,6 @@
 ---
 import type { Locale } from "../config/i18n";
+import { SITE } from "../config/site";
 
 interface Props {
   contentType: "article" | "note" | "fitness" | "life";
@@ -10,6 +11,7 @@ interface Props {
 const { contentType, contentId, language = "zh" } = Astro.props;
 const endpoint = String(import.meta.env.PUBLIC_REACTION_WORKER_URL ?? "").replace(/\/+$/, "");
 const enabled = Boolean(endpoint);
+const storageKey = SITE.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ":reaction-visitor:v1";
 const isChinese = language === "zh";
 const label = (contentType === "fitness" || contentType === "life") ? (isChinese ? "点赞" : "Like") : (isChinese ? "有帮助" : "Helpful");
 const loadingLabel = (contentType === "fitness" || contentType === "life") ? (isChinese ? "正在加载点赞数量" : "Loading like count") : (isChinese ? "正在加载有帮助数量" : "Loading helpful count");
@@ -24,6 +26,7 @@ const errorLabel = isChinese ? "暂时无法连接点赞服务，请重试。" :
     data-endpoint={endpoint}
     data-content-type={contentType}
     data-content-id={contentId}
+    data-storage-key={storageKey}
     data-error-label={errorLabel}
     data-loading-label={loadingLabel}
     aria-label={isChinese ? "内容反馈" : "Content feedback"}
@@ -48,7 +51,7 @@ const errorLabel = isChinese ? "暂时无法连接点赞服务，请重试。" :
 <script>
   // @ts-nocheck
   (() => {
-    const STORAGE_KEY = "inkerio:reaction-visitor:v1";
+    const STORAGE_KEY = document.querySelectorAll("[data-content-reaction]")[0]?.dataset.storageKey || "inkerio:reaction-visitor:v1";
     let memoryVisitorId = "";
 
     const randomVisitorId = () => {

@@ -2,7 +2,7 @@
 
 [简体中文](README_ZH.md) · [Content template](https://github.com/ThinkerQAQ/inkerio-content-template) · [Repository boundaries](docs/architecture/repository-boundaries.md) · [MIT License](LICENSE)
 
-**Inkerio** is a bilingual static blog engine built with Astro. It renders articles, notes and mind maps, projects, series, photography, RSS, sitemaps and full-text search from a separately owned content repository.
+**Inkerio** is a bilingual static blog engine built with Astro. It renders articles, notes and mind maps, projects, series, photography, RSS, sitemaps, incremental sitemap inventory and full-text search from a separately owned content repository.
 
 **Status:** Independent engine extraction under validation. The existing [ThinkerQAQ website](https://thinkerqaq.com/) still uses its original production deployment workflow.
 
