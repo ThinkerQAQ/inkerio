@@ -1,0 +1,62 @@
+name: Validate independent Inkerio engine
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: inkerio-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout engine
+        uses: actions/checkout@v6
+      - name: Checkout public content template
+        uses: actions/checkout@v6
+        with:
+          repository: ThinkerQAQ/inkerio-content-template
+          path: content-template
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - name: Setup Java for PlantUML
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Install diagram and headless browser libraries
+        run: sudo apt-get update && sudo apt-get install -y graphviz fonts-noto-cjk libnspr4 libnss3 libasound2t64
+      - name: Configure headless diagrams
+        run: |
+          echo '{"args":["--no-sandbox","--disable-setuid-sandbox"]}' > "$RUNNER_TEMP/mermaid-puppeteer.json"
+          echo "MERMAID_PUPPETEER_CONFIG_FILE=$RUNNER_TEMP/mermaid-puppeteer.json" >> "$GITHUB_ENV"
+      - name: Install dependencies
+        run: npm ci
+      - name: Assemble public content
+        run: node scripts/assemble-content.mjs --content-root content-template
+      - name: Verify documentation and engine tests
+        run: npm run test:docs && npm run test:engine
+      - name: Typecheck
+        run: npm run check
+      - name: Build static website
+        run: npm run build
+      - name: Verify static output
+        run: |
+          test -s dist/index.html
+          test -s dist/en/index.html
+          test -s dist/sitemap-index.xml
+          test -s dist/rss.xml
+          test -s dist/pagefind/pagefind-entry.json
+          ! grep -Rq 'thinkerqaq.com' dist/index.html

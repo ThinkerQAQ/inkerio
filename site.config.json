@@ -1,0 +1,20 @@
+{
+  "title": "Inkerio",
+  "homeTitle": "Inkerio | 双语博客示例",
+  "homeTitleEn": "Inkerio | Bilingual Blog Demo",
+  "description": "A bilingual static blog powered by Inkerio.",
+  "author": "Example Author",
+  "icpRecord": "",
+  "icpLookupUrl": "https://beian.miit.gov.cn/",
+  "publicSecurityRecord": "",
+  "publicSecurityLookupUrl": "https://beian.mps.gov.cn/",
+  "authorProfilePath": "/about/",
+  "alternateNames": [],
+  "url": "https://example.com",
+  "github": "https://github.com/ThinkerQAQ/inkerio",
+  "profiles": [],
+  "repository": "https://github.com/ThinkerQAQ/inkerio",
+  "contactEmail": "",
+  "locale": "zh-CN",
+  "commentsRepository": ""
+}
