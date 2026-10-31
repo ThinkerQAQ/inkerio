@@ -144,7 +144,7 @@ export const LOCALES: Record<Locale, LocaleConfig> = {
     shortLabel: "EN",
     htmlLang: "en",
     path: "en",
-    homeTitle: SITE.homeTitle,
+    homeTitle: SITE.homeTitleEn,
     nav: {
       articles: "Articles",
       projects: "Projects",
