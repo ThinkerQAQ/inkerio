@@ -48,6 +48,8 @@ jobs:
         run: node scripts/assemble-content.mjs --content-root content-template
       - name: Verify documentation and engine tests
         run: npm run test:docs && npm run test:engine
+      - name: Test independent CLI and MCP
+        run: npm run test:tooling
       - name: Typecheck
         run: npm run check
       - name: Build static website

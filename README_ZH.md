@@ -40,3 +40,18 @@ npm run build
 [site.config.json](site.config.json) 使用通用演示身份。部署时由专用站点仓库覆盖，不向公共引擎提交凭据、备案、Cookie 或真实内容。
 
 见[完整迁移顺序](docs/architecture/repository-boundaries.md)。原创引擎代码使用 [MIT](LICENSE)，第三方依赖及用户内容保留独立版权；参见[第三方声明](THIRD_PARTY_NOTICES.md)。
+
+## CLI 与 MCP（无需浏览器扩展）
+
+Inkerio 提供独立的 Node.js CLI 和 MCP stdio 入口，直接复用现有 Astro、图表及内容装配脚本。它不负责向第三方内容平台发布，也不依赖 Go、BlogCTL、浏览器扩展或 Cookie。
+
+```bash
+npm ci
+npm run tools:build
+node .inkerio-tools/cli.js status
+node .inkerio-tools/cli.js validate --content-root /absolute/path/to/content
+node .inkerio-tools/cli.js build
+node .inkerio-tools/cli.js preview --port 4321
+```
+
+MCP 客户端配置 stdio 命令 `node /absolute/path/to/inkerio/.inkerio-tools/mcp.js`；`INKERIO_CONTENT_ROOT` 配置内容仓库的绝对路径。查询类工具默认只读；内容装配、构建、图表渲染和启动预览等写入操作需在**本地 MCP 进程环境**中显式设置 `INKERIO_MCP_ALLOW_MUTATIONS=1`。MCP 不暴露任意 Shell，也不包含线上发布权限。跨平台运行依赖 Node.js 和引擎自身的依赖安装。
