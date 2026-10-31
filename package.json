@@ -29,11 +29,16 @@
     "test:reading-experience": "node --test src/markdown/reading-time.test.mjs src/markdown/image-loading.test.mjs src/lib/content-analytics.test.mjs src/lib/floating-actions-runtime.test.mjs src/lib/content-media-viewer.test.mjs src/lib/recent-notes.test.mjs src/components/ContentReaction.test.mjs",
     "test:note-view": "node --test src/lib/note-source.test.mjs src/lib/article-source.test.mjs",
     "test:engine": "npm run test:assembler && npm run test:boundary && npm run test:public-content-safety && npm run test:reading-experience && npm run test:note-view && node --test scripts/build-sitemap-inventory.test.mjs",
-    "test": "npm run assemble:template && npm run test:engine && npm run check && npm run build"
+    "test": "npm run assemble:template && npm run test:engine && npm run check && npm run build",
+    "tools:build": "tsc -p tooling/tsconfig.json",
+    "cli": "npm run tools:build --silent && node .inkerio-tools/cli.js",
+    "mcp:stdio": "node .inkerio-tools/mcp.js",
+    "test:tooling": "npm run tools:build && node --test tooling/*.test.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.4",
+    "@modelcontextprotocol/server": "2.4.0",
     "astro": "7.2.10",
     "markmap-lib": "^0.18.12",
     "markmap-toolbar": "^0.18.12",
@@ -45,6 +50,8 @@
     "@astrojs/check": "0.9.10",
     "@astrojs/markdown-satteri": "0.4.0",
     "@mermaid-js/mermaid-cli": "12.0.0",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@types/node": "24.10.0",
     "micromark": "4.0.2",
     "pagefind": "1.5.2",
     "remark-parse": "11.0.0",

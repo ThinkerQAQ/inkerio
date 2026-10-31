@@ -28,3 +28,6 @@ site.config.local.json
 *.pem
 *.p12
 *.key
+
+# Compiled local CLI / MCP outputs.
+.inkerio-tools/

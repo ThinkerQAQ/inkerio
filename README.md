@@ -4,7 +4,7 @@
 
 **Inkerio** is a bilingual static blog engine built with Astro. It renders articles, notes and mind maps, projects, series, photography, RSS, sitemaps, incremental sitemap inventory and full-text search from a separately owned content repository.
 
-**Status:** Independent engine extraction under validation. The existing [ThinkerQAQ website](https://thinkerqaq.com/) still uses its original production deployment workflow.
+**Status:** The standalone engine powers the production [ThinkerQAQ website](https://thinkerqaq.com/).
 
 ## Quick start
 
@@ -46,3 +46,20 @@ The checked-in [site.config.json](site.config.json) holds **generic demonstratio
 Run `npm run test:engine`, `npm run check` and `npm run build:template`. Rendering diagrams can require Java, Graphviz, fonts and Chromium depending on content. See [documentation](docs/index.md) and [migration plan](docs/architecture/repository-boundaries.md).
 
 Original engine code is [MIT](LICENSE). Third-party code and sample/real content have their own license terms; see [third-party notices](THIRD_PARTY_NOTICES.md).
+
+## CLI and MCP (no browser extension)
+
+Inkerio includes a local Node.js CLI and an MCP **stdio** adapter. Both reuse existing engine scripts; they do not publish to third-party content platforms and do not require BlogCTL, Go, a browser extension or browser cookies.
+
+```bash
+npm ci
+npm run tools:build
+node .inkerio-tools/cli.js status
+node .inkerio-tools/cli.js validate --content-root /absolute/path/to/content
+node .inkerio-tools/cli.js build
+node .inkerio-tools/cli.js preview --port 4321
+```
+
+Configure an MCP client to execute `node /absolute/path/to/inkerio/.inkerio-tools/mcp.js` after `npm run tools:build`. Set `INKERIO_CONTENT_ROOT` to an **absolute path** for `validate_content` and `assemble_content`. Read-only tools are `site_status`, `validate_content`, `inspect_routes` and preview status. To opt into file-writing actions (`assemble_content`, `build_site`, `render_diagrams`, preview start), set `INKERIO_MCP_ALLOW_MUTATIONS=1` in your **local MCP server environment**. This is not a remote deployment API; CI publishing and secrets stay separate. The MCP will not execute arbitrary shell commands or touch content outside the configured checkout.
+
+The MCP uses Node.js + TypeScript and the official MCP SDK. It runs on Windows, macOS and Linux wherever the engine's Node dependencies are supported. Standalone Go binaries and a browser extension are neither required nor bundled.
