@@ -51,7 +51,7 @@ const errorLabel = isChinese ? "暂时无法连接点赞服务，请重试。" :
 <script>
   // @ts-nocheck
   (() => {
-    const STORAGE_KEY = document.querySelector("[data-content-reaction]")?.dataset.storageKey || "inkerio:reaction-visitor:v1";
+    const STORAGE_KEY = document.querySelectorAll("[data-content-reaction]")[0]?.dataset.storageKey || "inkerio:reaction-visitor:v1";
     let memoryVisitorId = "";
 
     const randomVisitorId = () => {
