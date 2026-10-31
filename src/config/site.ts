@@ -11,6 +11,7 @@ export const SITE = {
   icpRecord: config.icpRecord,
   icpLookupUrl: config.icpLookupUrl,
   publicSecurityRecord: config.publicSecurityRecord,
+  publicSecurityIcon: config.publicSecurityIcon,
   publicSecurityLookupUrl: config.publicSecurityLookupUrl,
   authorProfilePath: config.authorProfilePath,
   alternateNames: config.alternateNames,

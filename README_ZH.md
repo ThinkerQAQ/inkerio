@@ -2,7 +2,7 @@
 
 [English](README.md) · [公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template) · [拆分方案](docs/architecture/repository-boundaries.md) · [MIT License](LICENSE)
 
-**Inkerio 是基于 Astro 的中英文静态博客引擎**，支持文章、笔记、思维导图、项目、系列、摄影、RSS、Sitemap 和全文搜索。内容由独立仓库提供，不与引擎源码混存。
+**Inkerio 是基于 Astro 的中英文静态博客引擎**，支持文章、笔记、思维导图、项目、系列、摄影、RSS、Sitemap、增量索引清单和全文搜索。内容由独立仓库提供，不与引擎源码混存。
 
 **状态：独立引擎迁移验证阶段。** [ThinkerQAQ 个人网站](https://thinkerqaq.com/) 仍使用原部署工作流，本仓库暂不触及生产部署。
 

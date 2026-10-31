@@ -17,7 +17,7 @@
     "check:drawio": "node scripts/render-drawio.mjs --check",
     "covers:social": "node scripts/render-cover-social.mjs",
     "build:astro": "node scripts/clean-dist.mjs && npm run diagrams && npm run covers:social && astro build && node scripts/check-home-website-schema.mjs",
-    "build": "npm run build:astro && node scripts/build-pagefind.mjs",
+    "build": "npm run build:astro && node scripts/build-sitemap-inventory.mjs && node scripts/build-pagefind.mjs",
     "build:template": "npm run assemble:template && npm run build",
     "check": "astro check",
     "preview": "astro preview --port 4321",
@@ -28,7 +28,7 @@
     "test:diagrams": "npm run diagrams && node --test scripts/plantuml/plantuml.test.mjs scripts/mermaid/mermaid.test.mjs scripts/drawio/drawio.test.mjs src/markdown/mermaid.test.mjs",
     "test:reading-experience": "node --test src/markdown/reading-time.test.mjs src/markdown/image-loading.test.mjs src/lib/content-analytics.test.mjs src/lib/floating-actions-runtime.test.mjs src/lib/content-media-viewer.test.mjs src/lib/recent-notes.test.mjs src/components/ContentReaction.test.mjs",
     "test:note-view": "node --test src/lib/note-source.test.mjs src/lib/article-source.test.mjs",
-    "test:engine": "npm run test:assembler && npm run test:boundary && npm run test:public-content-safety && npm run test:reading-experience && npm run test:note-view",
+    "test:engine": "npm run test:assembler && npm run test:boundary && npm run test:public-content-safety && npm run test:reading-experience && npm run test:note-view && node --test scripts/build-sitemap-inventory.test.mjs",
     "test": "npm run assemble:template && npm run test:engine && npm run check && npm run build"
   },
   "dependencies": {
