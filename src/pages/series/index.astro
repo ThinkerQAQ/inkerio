@@ -19,7 +19,7 @@ const includedArticleIds = new Set(
       href: seriesHref(entry),
       title: entry.data.title,
       description: entry.data.description,
-      label: entry.data.kind === "documentation" ? `${entry.data.relatedDocuments.length} 篇文档` : `${entry.data.relatedArticles.filter((id) => includedArticleIds.has(id)).length} 篇文章 · ${entry.data.relatedNoteCategories.length + entry.data.relatedNoteScopes.length} 个笔记分类`,
+      label: entry.data.kind === "documentation" ? `${entry.data.relatedDocuments.length + (entry.data.project ? 1 : 0)} 篇文档` : `${entry.data.relatedArticles.filter((id) => includedArticleIds.has(id)).length} 篇文章 · ${entry.data.relatedNoteCategories.length + entry.data.relatedNoteScopes.length} 个笔记分类`,
       status: seriesStatus[entry.data.status],
     }))} />
   </div>

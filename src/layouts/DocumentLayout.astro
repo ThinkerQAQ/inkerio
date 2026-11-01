@@ -1,47 +1,29 @@
 ---
-import { render } from "astro:content";
-import BaseLayout from "./BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import ReadingLayout from "./ReadingLayout.astro";
 import { LOCALES } from "../config/i18n";
-import { localizedSeriesSummary, seriesHref, formatDate, type SeriesEntry } from "../lib/content";
+import { seriesHref, localizedSeriesSummary, type SeriesEntry } from "../lib/content";
 import { documentAlternatives, documentHref, seriesDocuments, type DocumentEntry } from "../lib/documentation";
+import { projectReadingCollection, projectReadingItems, projectSourceHref } from "../lib/project-reading";
 interface Props { document: DocumentEntry; documents: DocumentEntry[]; series: SeriesEntry }
 const { document, documents, series } = Astro.props;
 const locale = document.data.language;
+const project = (await getCollection("projects")).find((entry) => entry.id === series.data.project);
 const entries = seriesDocuments(series, documents, locale);
-const current = entries.findIndex((entry) => entry.id === document.id);
-const previous = entries[current - 1];
-const next = entries[current + 1];
-const { Content, headings } = await render(document);
-const summary = localizedSeriesSummary(series, locale);
+const path = documentHref(document);
+const items = project ? projectReadingItems(project, series, documents, locale) : entries.map((entry) => ({ href: documentHref(entry), title: entry.data.title }));
+const index = items.findIndex((entry) => entry.href === path);
+const collection = project ? projectReadingCollection(project, series, documents, locale, path) : {
+  label: LOCALES[locale].ui.seriesLabel, title: localizedSeriesSummary(series, locale).title, href: seriesHref(series, locale),
+  groups: [{ items: items.map((entry) => ({ ...entry, current: entry.href === path })) }],
+};
+const { Content, headings, remarkPluginFrontmatter } = await render(document);
 ---
-<BaseLayout title={document.data.title} description={document.data.description} locale={locale} canonicalPath={documentHref(document)} languageAlternatives={documentAlternatives(document, documents)}>
-  <div class="shell page detail-page documentation-page">
-    <aside class="documentation-nav" aria-label={locale === "en" ? "Documentation contents" : "文档目录"}>
-      <a href={seriesHref(series, series.data.translations[locale] || locale === "zh" ? locale : "zh")}>{summary.title}</a>
-      <ol>{entries.map((entry) => <li><a href={documentHref(entry)} aria-current={entry.id === document.id ? "page" : undefined}>{entry.data.title}{entry.data.language !== locale ? " · 中文" : ""}</a></li>)}</ol>
-    </aside>
-    <article data-pagefind-body data-pagefind-filter="type:Documentation">
-      <header class="note-header detail-page-header">
-        <h1 data-pagefind-meta="title">{document.data.title}</h1>
-        <p>{document.data.description}</p>
-        <div class="note-meta">{LOCALES[locale].ui.updatedAt} {formatDate(document.data.updatedAt, locale)}</div>
-      </header>
-      {headings.length > 0 && <details class="document-toc"><summary>{locale === "en" ? "On this page" : "本页目录"}</summary><ul>{headings.map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ul></details>}
-      <div class="prose"><Content /></div>
-      <nav class="document-pagination" aria-label={locale === "en" ? "Chapter navigation" : "章节导航"}>
-        {previous && <a rel="prev" href={documentHref(previous)}>← {previous.data.title}</a>}
-        {next && <a rel="next" href={documentHref(next)}>{next.data.title} →</a>}
-      </nav>
-    </article>
-  </div>
-</BaseLayout>
-<style>
-.documentation-page { display: grid; grid-template-columns: minmax(10rem, 15rem) minmax(0, 1fr); gap: 2.5rem; }
-.documentation-nav { font-size: .9rem; align-self: start; position: sticky; top: 6rem; }
-.documentation-nav ol { padding-left: 1.3rem; }
-.documentation-nav li { margin-block: .8rem; }
-.documentation-nav a[aria-current="page"] { font-weight: 700; text-decoration: underline; }
-.document-toc { margin-bottom: 2rem; }
-.document-pagination { display: flex; justify-content: space-between; gap: 1.5rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color, #ddd); }
-@media (max-width: 800px) { .documentation-page { grid-template-columns: 1fr; } .documentation-nav { position: static; } }
-</style>
+<ReadingLayout title={document.data.title} description={document.data.description} locale={locale} canonicalPath={path}
+  contentType="documentation" contentId={document.id} seriesId={series.id} headings={headings}
+  readingMinutes={Math.max(1, Math.ceil(Number(remarkPluginFrontmatter.readingMinutes) || 1))}
+  updatedAt={document.data.updatedAt} languageAlternatives={documentAlternatives(document, documents)}
+  collection={collection} previous={items[index - 1]} next={items[index + 1]}
+  markdownSourceUrl={projectSourceHref("docs", document.id)}>
+  <Content />
+</ReadingLayout>

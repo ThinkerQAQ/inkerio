@@ -1,3 +1,4 @@
+import { documentIdFromPath, seriesIdFromPath } from "./lib/project-paths.mjs";
 import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
@@ -143,9 +144,9 @@ const projectLocalizedSummary = localizedSummary.extend({
 
 const projects = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: ["*.md", "*/project.md"],
     base: "./src/content/projects",
-    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
+    generateId: ({ entry }) => entry.replace(/\/project\.md$/i, "").replace(/\.md$/i, "").replaceAll("\\", "/"),
   }),
   schema: z.object({
     title: z.string(),
@@ -166,11 +167,20 @@ const projects = defineCollection({
   }),
 });
 
+const projectReadmes = defineCollection({
+  loader: glob({
+    pattern: ["*/README.md", "*/README_ZH.md"],
+    base: "./src/content/projects",
+    generateId: ({ entry }) => entry.replace(/\.md$/i, ""),
+  }),
+  schema: z.object({ project: z.string(), language: z.enum(SUPPORTED_LOCALES) }),
+});
+
 const documents = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
-    base: "./src/content/documents",
-    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
+    pattern: ["documents/**/*.md", "projects/*/docs/**/*.md"],
+    base: "./src/content",
+    generateId: ({ entry }) => documentIdFromPath(entry),
   }),
   schema: z.object({
     title: z.string(),
@@ -190,9 +200,9 @@ const relatedNoteScope = z.object({
 
 const series = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
-    base: "./src/content/series",
-    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
+    pattern: ["series/**/*.md", "projects/*/series.md"],
+    base: "./src/content",
+    generateId: ({ entry }) => seriesIdFromPath(entry),
   }),
   schema: z.object({
     title: z.string(),
@@ -256,4 +266,4 @@ const workoutSummaries = defineCollection({
   }).strict(),
 });
 
-export const collections = { documents, pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };
+export const collections = { projectReadmes, documents, pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };

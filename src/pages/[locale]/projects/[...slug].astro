@@ -1,68 +1,15 @@
 ---
-import { getCollection, render, type CollectionEntry } from "astro:content";
-import ProjectKnowledgeIndex from "../../../components/ProjectKnowledgeIndex.astro";
-import { LOCALES, nonDefaultLocales, type Locale } from "../../../config/i18n";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import {
-  formatDate,
-  localizedProjectSummary,
-  projectHref,
-  projectStatusLabel,
-} from "../../../lib/content";
-
+import { getCollection } from "astro:content";
+import ProjectReadingPage from "../../../components/ProjectReadingPage.astro";
+import { LOCALES, nonDefaultLocales } from "../../../config/i18n";
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
-  const translations = await getCollection("projectTranslations");
-  return nonDefaultLocales().flatMap((locale) => projects.map((project) => ({
-    params: { locale: LOCALES[locale].path, slug: project.id },
-    props: {
-      locale,
-      project,
-      translation: translations.find(
-        (entry) => entry.data.translationOf === project.id && entry.data.language === locale,
-      ),
-    },
-  })));
+  return nonDefaultLocales().flatMap((locale) => projects.map((project) => ({ params: { locale: LOCALES[locale].path, slug: project.id }, props: { project, locale } })));
 }
-
-interface Props {
-  locale: Locale;
-  project: CollectionEntry<"projects">;
-  translation?: CollectionEntry<"projectTranslations">;
-}
-
-const { locale, project, translation } = Astro.props;
-const { data } = project;
-const { Content } = await render(translation ?? project);
-const summary = localizedProjectSummary(project, locale);
+const { project, locale } = Astro.props;
+const readmes = await getCollection("projectReadmes");
+const translations = await getCollection("projectTranslations");
 const seriesEntries = await getCollection("series");
+const documents = await getCollection("documents");
 ---
-
-<BaseLayout
-  title={summary.title}
-  description={summary.description}
-  canonicalPath={projectHref(project, locale)}
-  locale={locale}
-  languageAlternatives={[{ locale: "zh", href: projectHref(project, "zh") }, ...(translation ? [{ locale, href: projectHref(project, locale) }] : [])]}
-  noindex={!translation}
->
-  <div class="shell page detail-page">
-    <article data-pagefind-body data-pagefind-filter="type:Project">
-      <header class="note-header detail-page-header">
-        <h1 data-pagefind-meta="title">{summary.title}</h1>
-        <p class="note-description">{summary.description}</p>
-        <div class="note-meta">
-          <span>{projectStatusLabel(data.status, locale)}</span>
-          <span>{LOCALES[locale].ui.updatedAt} {formatDate(data.updatedAt, locale)}</span>
-        </div>
-      </header>
-      {!translation && <p class="source-note">The project body is currently maintained in Chinese.</p>}
-      <div class="prose" lang={translation ? LOCALES[locale].htmlLang : "zh-CN"}><Content /></div>
-      <ProjectKnowledgeIndex
-        project={project}
-        seriesEntries={seriesEntries}
-        locale={locale}
-      />
-    </article>
-  </div>
-</BaseLayout>
+<ProjectReadingPage project={project} locale={locale} readmes={readmes} translations={translations} seriesEntries={seriesEntries} documents={documents} />

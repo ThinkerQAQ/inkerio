@@ -37,9 +37,11 @@ export async function collectDiagrams() {
     const collectionRoot = path.join(ROOT, "src", "content", collection);
     for (const file of await markdownFiles(collectionRoot)) {
       const { content, frontmatter } = parseFrontmatter(await readFile(file, "utf8"), { frontmatter: "empty-with-lines" });
+      if (collection === "projects" && /\/project\.md$|\/series\.md$/.test(file)) continue;
+      const actualCollection = collection === "projects" && file.includes(`${path.sep}docs${path.sep}`) ? "documents" : collection;
       const published = collection !== "articles" || frontmatter.status === "published" || includeDrafts;
       const id = path.relative(collectionRoot, file).replaceAll(path.sep, "/").replace(/\.md$/, "");
-      const route = contentDiagramRoute(collection, id, frontmatter);
+      const route = contentDiagramRoute(actualCollection, id, frontmatter);
       visitMermaid(parser.parse(content), (node) => {
         const origin = { file: path.relative(ROOT, file).replaceAll(path.sep, "/"), line: node.position?.start.line, route, published };
         let key;

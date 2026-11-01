@@ -7,7 +7,7 @@ export async function getStaticPaths() {
   const seriesEntries = await getCollection("series");
   validateDocuments(documents, seriesEntries);
   return documents.filter((entry) => entry.data.language === "zh").map((document) => ({
-    params: { series: document.data.series, slug: document.data.translationOf ?? document.id },
+    params: { series: document.data.series, slug: (document.data.translationOf ?? document.id).replace(/^en\//, "") },
     props: { document, documents, series: seriesEntries.find((entry) => entry.id === document.data.series)! },
   }));
 }

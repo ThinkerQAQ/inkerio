@@ -3,13 +3,13 @@ import { localizePath, type Locale } from "../config/i18n";
 import { type SeriesEntry } from "./content";
 export type DocumentEntry = CollectionEntry<"documents">;
 export function documentHref(document: DocumentEntry): string {
-  const id = document.data.translationOf ?? document.id;
+  const id = (document.data.translationOf ?? document.id).replace(/^en\//, "");
   return localizePath(document.data.language, `/series/${document.data.series}/docs/${id}/`);
 }
 export function seriesDocuments(series: SeriesEntry, documents: DocumentEntry[], locale: Locale): DocumentEntry[] {
   return series.data.relatedDocuments.map((id) => {
     const root = documents.find((entry) => entry.id === id);
-    if (!root || root.data.translationOf || root.data.language !== "zh" || root.data.series !== series.id) {
+    if (!root || root.data.translationOf || root.data.series !== series.id) {
       throw new Error(`Series ${series.id}: invalid document root ${id}`);
     }
     return documents.find((entry) => entry.data.translationOf === id && entry.data.language === locale) ?? root;
@@ -29,7 +29,7 @@ export function validateDocuments(documents: DocumentEntry[], seriesEntries: Ser
     const key = `${rootId}:${document.data.language}`;
     if (locales.has(key)) throw new Error(`Duplicate document translation ${key}`);
     locales.add(key);
-    if (document.data.translationOf && (document.data.language === "zh" || !documents.some((entry) => entry.id === rootId && entry.data.series === series.id && entry.data.language === "zh" && !entry.data.translationOf))) throw new Error(`Invalid document translation ${document.id}`);
+    if (document.data.translationOf && (!documents.some((entry) => entry.id === rootId && entry.data.series === series.id && entry.data.language !== document.data.language && !entry.data.translationOf))) throw new Error(`Invalid document translation ${document.id}`);
   }
 }
 export function documentAlternatives(document: DocumentEntry, documents: DocumentEntry[]) {

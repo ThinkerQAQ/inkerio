@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { prepareReadme } from './sync-project-readmes.mjs';
+import { prepareReadme } from './sync-project-content.mjs';
 const source = { repository: 'sample/tool', revision: 'a'.repeat(40), file: 'README.md', routes: { 'README_ZH.md': '/projects/tool/' } };
 test('preserves code and content while resolving links, translations and images', () => {
  const result = prepareReadme('# Tool\n\n[中文](README_ZH.md) [guide](docs/start.md#go) ![demo](images/demo.png)\n\n```md\n[x](relative.md)\n```\n\n[local](#install) [site](https://example.org)\n', source);
@@ -16,4 +16,14 @@ test('resolves references and HTML image assets relative to their original file'
  assert.ok(result.includes(`/sample/tool/${source.revision}/assets/a.png`));
  assert.ok(result.includes(`/sample/tool/${source.revision}/assets/b.png`));
  assert.ok(result.includes('href="/projects/tool/"'));
+});
+
+import { documentIdentity, describeDocument } from './sync-project-content.mjs';
+test('pairs bilingual repository documentation while retaining its directory hierarchy', () => {
+ assert.deepEqual(documentIdentity('docs/zh-CN/how-to/setup.md'), { locale:'zh', slug:'how-to/setup' });
+ assert.deepEqual(documentIdentity('docs/how-to/setup.md'), { locale:'en', slug:'how-to/setup' });
+ assert.deepEqual(documentIdentity('docs/SETUP.zh-CN.md'), { locale:'zh', slug:'SETUP' });
+ assert.deepEqual(documentIdentity('docs/cn/reference/cli.md'), { locale:'zh', slug:'reference/cli' });
+ assert.deepEqual(documentIdentity('docs/README_ZH.md'), { locale:'zh', slug:'README' });
+ assert.equal(describeDocument('# Setup\n\nConfigure **your** project.\n','setup.md').title,'Setup');
 });

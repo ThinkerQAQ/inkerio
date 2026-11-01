@@ -5,7 +5,7 @@ import { localizedSeriesSummary, seriesHref, type ProjectEntry, type SeriesEntry
 
 interface Props { project: ProjectEntry; seriesEntries: SeriesEntry[]; locale: Locale }
 const { project, seriesEntries, locale } = Astro.props;
-const docs = seriesEntries.filter((entry) => entry.data.project === project.id && entry.data.kind === "documentation");
+const docs = seriesEntries.filter((entry) => entry.data.project === project.id && entry.data.kind === "documentation" && entry.data.relatedDocuments.length > 0);
 ---
 {project.data.github.length > 0 && (
   <section class="related-content" aria-labelledby="project-github-heading">
