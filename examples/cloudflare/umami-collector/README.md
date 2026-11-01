@@ -25,7 +25,7 @@ This **stateless, self-hostable reference Worker** proxies Umami Cloud tracking 
 
 The browser fetches `GET /u.js` from your Worker and POSTs `/api/send` to the same **Worker origin**. If you already serve `/u.js` as an audited local asset, set `scriptSrc` to `/u.js` instead. This does **not** make your POST same-origin; a genuine same-origin reverse proxy is required to forward `/api/send` on a static site domain. You can also avoid this Worker and configure `collectorOrigin` directly to a supported Umami endpoint if its CORS and privacy requirements allow it.
 
-The Worker rejects requests from origins/websites not explicitly configured and limits event payloads to 64 KiB. It forwards a small header allowlist and never forwards cookies, bearer tokens, client-supplied geography or arbitrary upstream URLs. No wildcard CORS. The `/health` endpoint reports only `{ "status": "ok" }`; this confirms liveness, not recorded pageviews or mainland connectivity. To validate tracking, check browser POST status and new events in your Umami dashboard using a permitted test visit.
+The Worker rejects requests from origins/websites not explicitly configured, requires a Cloudflare `ANALYTICS_RATE_LIMITER` binding (fails closed when missing), and limits event payloads to 64 KiB. It forwards a small header allowlist and never forwards cookies, bearer tokens, client-supplied geography or arbitrary upstream URLs. No wildcard CORS. The `/health` endpoint reports only `{ "status": "ok" }`; this confirms liveness, not recorded pageviews or mainland connectivity. To validate tracking, check browser POST status and new events in your Umami dashboard using a permitted test visit.
 
 ```sh
 node --test examples/cloudflare/umami-collector/src/index.test.js

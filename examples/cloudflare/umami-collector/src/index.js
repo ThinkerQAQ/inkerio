@@ -49,6 +49,12 @@ export async function handleRequest(request, env) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(origin) });
   if (request.method !== 'POST') return response('Method not allowed', 405, origin);
 
+  // Public website IDs and CORS are not authorization secrets; enforce a
+  // Cloudflare-controlled per-client rate limit before forwarding requests.
+  if (!env.ANALYTICS_RATE_LIMITER) return response('Rate limiter is not configured', 503, origin);
+  const ip = request.headers.get('cf-connecting-ip') || origin;
+  const { success: withinLimit } = await env.ANALYTICS_RATE_LIMITER.limit({ key: ip });
+  if (!withinLimit) return response('Too many requests', 429, origin);
   const websiteId = request.headers.get('x-umami-website-id') || '';
   // Fail closed unless owner explicitly selects their sites and CORS origins.
   if (!websiteId || !allowlist(env.ALLOWED_WEBSITE_IDS).has(websiteId)) return response('Unknown Umami website', 403, origin);

@@ -151,11 +151,11 @@ export async function handleRequest(request, env) {
       return json(await getState(env.REACTIONS_DB, resource.contentType, resource.contentId, visitorHash), 200, origin);
     }
 
+    // A misconfigured self-hosted backend must never accept unlimited writes.
+    if (!env.REACTION_RATE_LIMITER) return json({ error: "Rate limiter is not configured" }, 503, origin);
     const limiterKey = request.headers.get("cf-connecting-ip") || visitorHash;
-    if (env.REACTION_RATE_LIMITER) {
-      const { success } = await env.REACTION_RATE_LIMITER.limit({ key: limiterKey });
-      if (!success) return json({ error: "Too many reactions. Please try again later." }, 429, origin);
-    }
+    const { success } = await env.REACTION_RATE_LIMITER.limit({ key: limiterKey });
+    if (!success) return json({ error: "Too many reactions. Please try again later." }, 429, origin);
 
     const state = await mutate(
       env.REACTIONS_DB,

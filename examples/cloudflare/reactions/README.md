@@ -12,7 +12,7 @@ All calls target `https://YOUR_WORKER/v1/reactions?contentType=article&contentId
 | `PUT` | Idempotently add one reaction | `{ "count": 1, "reacted": true }` |
 | `DELETE` | Idempotently remove it | `{ "count": 0, "reacted": false }` |
 
-The Worker stores an HMAC-SHA256 **hash** of the browser's pseudonymous visitor ID in D1, not the raw ID; it does not persist user email or IP. Rate limiting uses the configured Cloudflare Worker `REACTION_RATE_LIMITER` binding. `ALLOWED_ORIGINS` is an explicit comma-separated allowlist; no wildcard credentials or permissive `*` CORS. For production set a strong server-side `REACTION_HMAC_SECRET` through Wrangler Secrets and restrict origins. The site has a responsibility to publish its own privacy notice and implement deletion/retention policies where applicable.
+The Worker stores an HMAC-SHA256 **hash** of the browser's pseudonymous visitor ID in D1, not the raw ID; it does not persist user email or IP. Rate limiting requires the configured Cloudflare Worker `REACTION_RATE_LIMITER` binding; missing rate limiting disables writes (HTTP 503) instead of accepting unlimited mutations. `ALLOWED_ORIGINS` is an explicit comma-separated allowlist; no wildcard credentials or permissive `*` CORS. For production set a strong server-side `REACTION_HMAC_SECRET` through Wrangler Secrets and restrict origins. The site has a responsibility to publish its own privacy notice and implement deletion/retention policies where applicable.
 
 ## Deploy under your own account
 

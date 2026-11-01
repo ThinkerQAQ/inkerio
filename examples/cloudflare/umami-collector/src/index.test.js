@@ -4,7 +4,7 @@ import { handleRequest } from './index.js';
 
 const owner = 'https://my-blog.example';
 const worker = 'https://my-collector.example';
-const env = { ALLOWED_ORIGINS: owner, ALLOWED_WEBSITE_IDS: 'my-public-website-id' };
+const env = { ALLOWED_ORIGINS: owner, ALLOWED_WEBSITE_IDS: 'my-public-website-id', ANALYTICS_RATE_LIMITER: { async limit() { return { success: true }; } } };
 const event = { type: 'event', payload: { website: 'my-public-website-id', url: '/', hostname: 'my-blog.example' } };
 function post(extra = {}, body = event) {
   return new Request(worker + '/api/send', {
@@ -26,7 +26,7 @@ test('CORS accepts configured origin and rejects other origins without wildcard'
   assert.equal((await handleRequest(new Request(worker + '/api/send', { method: 'OPTIONS', headers: { origin: 'https://evil.example' } }), env)).status, 403);
 });
 test('POST is disabled without an explicit website allowlist', async () => {
-  assert.equal((await handleRequest(post(), { ALLOWED_ORIGINS: owner })).status, 403);
+  assert.equal((await handleRequest(post(), { ...env, ALLOWED_WEBSITE_IDS: '' })).status, 403);
 });
 test('refuses unrecognized public website IDs and mismatched JSON IDs', async () => {
   assert.equal((await handleRequest(post({ 'x-umami-website-id': 'attacker-site' }), env)).status, 403);
@@ -59,4 +59,10 @@ test('forwards only the allowlisted Umami headers and an approved event to fixed
 test('wrong methods and unknown paths do not proxy requests', async () => {
   assert.equal((await handleRequest(new Request(worker + '/api/send', { headers: { origin: owner } }), env)).status, 405);
   assert.equal((await handleRequest(new Request(worker + '/not-a-route'), env)).status, 404);
+});
+
+test('self-hosted collector fails closed when rate limiter is missing or denies requests', async () => {
+  assert.equal((await handleRequest(post(), { ...env, ANALYTICS_RATE_LIMITER: undefined })).status, 503);
+  const limited = { ...env, ANALYTICS_RATE_LIMITER: { async limit() { return { success: false }; } } };
+  assert.equal((await handleRequest(post(), limited)).status, 429);
 });

@@ -206,3 +206,12 @@ test("allows configured primary and secondary blog origins without allowing thir
   const forbidden = await handleRequest(request("GET", url, undefined, "https://evil.example"), runtime);
   assert.equal(forbidden.status, 403);
 });
+
+test("self-hosted mutations fail closed without a rate limiter while GET remains available", async () => {
+  const runtime = env();
+  delete runtime.REACTION_RATE_LIMITER;
+  const url = "/v1/reactions?contentType=article&contentId=sample";
+  assert.equal((await handleRequest(request("GET", url), runtime)).status, 200);
+  assert.equal((await handleRequest(request("PUT", url), runtime)).status, 503);
+  assert.equal(runtime.REACTIONS_DB.rows.length, 0);
+});
