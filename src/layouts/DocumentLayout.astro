@@ -1,29 +1,20 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import ReadingLayout from "./ReadingLayout.astro";
-import { LOCALES } from "../config/i18n";
-import { seriesHref, localizedSeriesSummary, type SeriesEntry } from "../lib/content";
-import { documentAlternatives, documentHref, seriesDocuments, type DocumentEntry } from "../lib/documentation";
+import type { ProjectEntry } from "../lib/content";
+import { documentAlternatives, documentHref, type DocumentEntry } from "../lib/documentation";
 import { projectReadingCollection, projectReadingItems, projectSourceHref } from "../lib/project-reading";
-interface Props { document: DocumentEntry; documents: DocumentEntry[]; series: SeriesEntry }
-const { document, documents, series } = Astro.props;
+interface Props { document: DocumentEntry; documents: DocumentEntry[]; project: ProjectEntry }
+const { document, documents, project } = Astro.props;
 const locale = document.data.language;
-const project = (await getCollection("projects")).find((entry) => entry.id === series.data.project);
-const entries = seriesDocuments(series, documents, locale);
 const path = documentHref(document);
-const items = project ? projectReadingItems(project, series, documents, locale) : entries.map((entry) => ({ href: documentHref(entry), title: entry.data.title }));
+const items = projectReadingItems(project, documents, locale);
 const index = items.findIndex((entry) => entry.href === path);
-const collection = project ? projectReadingCollection(project, series, documents, locale, path) : {
-  label: LOCALES[locale].ui.seriesLabel, title: localizedSeriesSummary(series, locale).title, href: seriesHref(series, locale),
-  groups: [{ items: items.map((entry) => ({ ...entry, current: entry.href === path })) }],
-};
 const { Content, headings, remarkPluginFrontmatter } = await render(document);
 ---
 <ReadingLayout title={document.data.title} description={document.data.description} locale={locale} canonicalPath={path}
-  contentType="documentation" contentId={document.id} seriesId={series.id} headings={headings}
+  contentType="documentation" contentId={document.id} headings={headings}
   readingMinutes={Math.max(1, Math.ceil(Number(remarkPluginFrontmatter.readingMinutes) || 1))}
   updatedAt={document.data.updatedAt} languageAlternatives={documentAlternatives(document, documents)}
-  collection={collection} previous={items[index - 1]} next={items[index + 1]}
-  markdownSourceUrl={projectSourceHref("docs", document.id)}>
-  <Content />
-</ReadingLayout>
+  collection={projectReadingCollection(project, documents, locale, path)} previous={items[index - 1]} next={items[index + 1]}
+  markdownSourceUrl={projectSourceHref("docs", document.id)}><Content /></ReadingLayout>

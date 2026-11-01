@@ -35,10 +35,10 @@ const ui = LOCALES[locale].ui;
   <slot name="head" slot="head" />
   <div class:list={["shell", "content-shell", { "content-shell--with-series": collection }]}>
     <ReadingExperience locale={locale} />
-    <MobileReadingNavigation collection={collection} collectionTabLabel={ui.seriesLabel} headings={headings} locale={locale} />
-    {collection && <ContentCollectionIndex {...collection} ariaLabel={ui.seriesLabel}
-      hideLabel={locale === "en" ? "Hide series articles" : "隐藏系列文章"}
-      restoreLabel={locale === "en" ? "Show series articles" : "展开系列文章"} />}
+    <MobileReadingNavigation collection={collection} collectionTabLabel={collection?.label ?? ui.seriesLabel} headings={headings} locale={locale} />
+    {collection && <ContentCollectionIndex {...collection} ariaLabel={collection.label}
+      hideLabel={contentType === "article" ? (locale === "en" ? "Hide series articles" : "隐藏系列文章") : (locale === "en" ? "Hide project documentation" : "隐藏项目文档")}
+      restoreLabel={contentType === "article" ? (locale === "en" ? "Show series articles" : "展开系列文章") : (locale === "en" ? "Show project documentation" : "展开项目文档")} />}
     <article class="note" data-pagefind-body data-pagefind-filter={`type:${contentType === "article" ? "Article" : contentType === "project" ? "Project" : "Documentation"}`}
       data-analytics-content-type={contentType === "article" ? "article" : undefined}
       data-analytics-lang={locale} data-analytics-series={seriesId} data-content-id={contentId}>

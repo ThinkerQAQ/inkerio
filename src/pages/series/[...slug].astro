@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import DocumentationIndex from "../../components/DocumentationIndex.astro";
 import ArticleList from "../../components/ArticleList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import NoteCategoryPreview from "../../components/NoteCategoryPreview.astro";
@@ -78,7 +77,6 @@ const relatedNoteScopes = data.relatedNoteScopes.map((scope) => {
 });
 
 const relatedNoteGroups = [...relatedNoteCategories, ...relatedNoteScopes];
-const documents = await getCollection("documents");
 ---
 <BaseLayout
   title={data.title}
@@ -98,7 +96,7 @@ const documents = await getCollection("documents");
           )}
         </div>
       </header>
-      {data.kind === "documentation" ? <DocumentationIndex series={series} documents={documents} locale="zh" /> : <section aria-label="系列文章"><ArticleList entries={relatedArticles} emptyMessage="正式文章还在整理中，可以先阅读下方参考笔记。" /></section>}
+      <section aria-label="系列文章"><ArticleList entries={relatedArticles} emptyMessage="正式文章还在整理中，可以先阅读下方参考笔记。" /></section>
     </article>
     {relatedNoteGroups.length > 0 && (
       <section class="related-content series-reference-notes" aria-labelledby="reference-notes-heading">

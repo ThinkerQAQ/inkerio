@@ -5,7 +5,7 @@ export function contentDiagramRoute(collection, id, data) {
   if (collection === "documents") {
     const project = id.includes("/docs/") ? id.split("/")[0] : "";
     const slug = data.translationOf ? root : project ? `${project}/${root}` : root;
-    return `${prefix}/series/${data.series}/docs/${slug}/`;
+    return `${prefix}/projects/${data.project}/docs/${slug.replace(new RegExp(`^${data.project}/`), "")}/`;
   }
   if (collection === "projects" && /\/README(?:_ZH)?$/.test(id)) return `${prefix}/projects/${data.project || id.split("/")[0]}/`;
   if (collection === "project-translations") return `${prefix}/projects/${root}/`;

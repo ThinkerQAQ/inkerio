@@ -57,7 +57,7 @@ const localizedSeries = entries.filter((entry) => seriesHasLocaleSummary(entry, 
           href: seriesHref(entry, locale),
           title: summary.title,
           description: summary.description,
-          label: entry.data.kind === "documentation" ? `${entry.data.relatedDocuments.length + (entry.data.project ? 1 : 0)} documents` : seriesUi.articleProgress(translatedArticleCount, entry.data.relatedArticles.length),
+          label: seriesUi.articleProgress(translatedArticleCount, entry.data.relatedArticles.length),
           status: seriesStatusLabel(entry.data.status, locale),
         };
       })} />

@@ -1,0 +1,25 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../../../layouts/BaseLayout.astro";
+import CollectionHeader from "../../../../../components/CollectionHeader.astro";
+import DocumentationIndex from "../../../../../components/DocumentationIndex.astro";
+import { localizedProjectSummary, projectHref } from "../../../../../lib/content";
+import { localizePath } from "../../../../../config/i18n";
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).filter((entry) => entry.data.documents.length > 0);
+  return projects.map((project) => ({ params: { locale: "en", project: project.id }, props: { project, locale: "en" as const } }));
+}
+import type { ProjectEntry } from "../../../../../lib/content";
+import type { Locale } from "../../../../../config/i18n";
+interface Props { project: ProjectEntry; locale: Locale }
+const { project, locale } = Astro.props;
+const documents = await getCollection("documents");
+const summary = localizedProjectSummary(project, locale);
+---
+<BaseLayout title={`${summary.title} · ${locale === "en" ? "Documentation" : "文档"}`} description={summary.description} locale={locale}
+  languageAlternatives={[{ locale: "zh", href: localizePath("zh", `/projects/${project.id}/docs/`) }, { locale: "en", href: localizePath("en", `/projects/${project.id}/docs/`) }]}>
+  <div class="shell page collection-page"><CollectionHeader title={`${summary.title} · ${locale === "en" ? "Documentation" : "文档"}`} description={summary.description} />
+    <p><a href={projectHref(project, locale)}>{locale === "en" ? "Project README" : "项目 README"}</a></p>
+    <DocumentationIndex project={project} documents={documents} locale={locale} />
+  </div>
+</BaseLayout>

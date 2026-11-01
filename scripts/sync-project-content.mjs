@@ -80,7 +80,6 @@ export async function syncProjectContent(contentRoot) {
     const header = original.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!header) throw new Error(`Missing project metadata: ${source.id}`);
     const metadata = parse(header[1]);
-    const seriesId = `${source.id}-docs`;
     const tree = source.docs === false ? { tree: [] } : await (await getPublic(`https://api.github.com/repos/${source.repository}/git/trees/${source.revision}?recursive=1`)).json();
     if (tree.truncated) throw new Error(`Source tree is truncated: ${source.repository}`);
     const files = tree.tree.filter((entry) => entry.type === 'blob' && /^docs\/.+\.md$/i.test(entry.path))
@@ -92,7 +91,7 @@ export async function syncProjectContent(contentRoot) {
       group[item.locale] = item; identities.set(item.slug, group);
     }
     const routes = { ...source.routes };
-    for (const item of files) routes[item.file] = `${item.locale === 'en' ? '/en' : ''}/series/${seriesId}/docs/${source.id}/${item.slug}/`;
+    for (const item of files) routes[item.file] = `${item.locale === 'en' ? '/en' : ''}/projects/${source.id}/docs/${item.slug}/`;
     const roots = [];
     const expectedDocs = new Set();
     for (const [slug, group] of identities) {
@@ -101,7 +100,7 @@ export async function syncProjectContent(contentRoot) {
       roots.push(rootLocale === 'en' ? `en/${rootId}` : rootId);
       for (const [locale, item] of Object.entries(group)) {
         const markdown = (await (await getPublic(`https://raw.githubusercontent.com/${source.repository}/${source.revision}/${item.file}`)).text()).replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
-        const data = { ...describeDocument(markdown, item.file), series: seriesId, language: locale, updatedAt: metadata.updatedAt };
+        const data = { ...describeDocument(markdown, item.file), project: source.id, language: locale, updatedAt: metadata.updatedAt };
         if (locale !== rootLocale) data.translationOf = rootLocale === 'en' ? `en/${rootId}` : rootId;
         const target = path.join(directory, 'docs', ...(locale === 'en' ? ['en'] : []), `${slug}.md`);
         expectedDocs.add(target);
@@ -122,16 +121,12 @@ export async function syncProjectContent(contentRoot) {
       const body = prepareReadme(await (await getPublic(`https://raw.githubusercontent.com/${source.repository}/${source.revision}/${file}`)).text(), { ...source, file, routes });
       pending.push([path.join(directory, locale === 'zh' ? 'README_ZH.md' : 'README.md'), frontmatter({ project: source.id, language: locale }, body)]);
     }
-    pending.push([path.join(directory, 'series.md'), frontmatter({
-      title: metadata.title, description: metadata.description, status: metadata.status === 'archived' ? 'complete' : 'active',
-      updatedAt: metadata.updatedAt, kind: 'documentation', project: source.id, relatedDocuments: roots,
-      translations: { en: { title: metadata.translations?.en?.title ?? metadata.title, description: metadata.translations?.en?.description ?? metadata.description } },
-    })]);
+    pending.push([metadataPath, frontmatter({ ...metadata, documents: roots })]);
   }
   // Validate and download every source before replacing synced Markdown. Other project files are preserved.
   for (const [target, content] of pending) { await mkdir(path.dirname(target), { recursive: true }); await writeFile(target, content); }
   for (const target of stale) await rm(target);
-  console.log(`Synchronized ${pending.length} project README, documentation and series files.`);
+  console.log(`Synchronized ${pending.length} project README, documentation and project metadata files.`);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

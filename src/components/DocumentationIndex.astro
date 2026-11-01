@@ -1,13 +1,11 @@
 ---
-import { getCollection } from "astro:content";
 import type { Locale } from "../config/i18n";
-import type { SeriesEntry } from "../lib/content";
-import { documentHref, seriesDocuments, type DocumentEntry } from "../lib/documentation";
+import type { ProjectEntry } from "../lib/content";
+import type { DocumentEntry } from "../lib/documentation";
 import { projectReadingItems } from "../lib/project-reading";
 import ContentEntryList from "./ContentEntryList.astro";
-interface Props { series: SeriesEntry; documents: DocumentEntry[]; locale: Locale }
-const { series, documents, locale } = Astro.props;
-const project = (await getCollection("projects")).find((entry) => entry.id === series.data.project);
-const items = project ? projectReadingItems(project, series, documents, locale) : seriesDocuments(series, documents, locale).map((entry) => ({ href: documentHref(entry), ...entry.data }));
+interface Props { project: ProjectEntry; documents: DocumentEntry[]; locale: Locale }
+const { project, documents, locale } = Astro.props;
+const items = projectReadingItems(project, documents, locale);
 ---
 <ContentEntryList items={items.map((item) => ({ ...item, label: item.language === "en" ? "English" : "文档" }))} locale={locale} emptyMessage={locale === "en" ? "Documentation is being prepared." : "文档正在整理中。"} />

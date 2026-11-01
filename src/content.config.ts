@@ -1,4 +1,4 @@
-import { documentIdFromPath, seriesIdFromPath } from "./lib/project-paths.mjs";
+import { documentIdFromPath } from "./lib/project-paths.mjs";
 import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
@@ -163,6 +163,7 @@ const projects = defineCollection({
     })).default([]),
     tutorials: z.array(projectResource).default([]),
     documentation: z.array(projectResource).default([]),
+    documents: z.array(z.string()).default([]),
     translations: z.record(z.string(), projectLocalizedSummary).default({}),
   }),
 });
@@ -178,14 +179,14 @@ const projectReadmes = defineCollection({
 
 const documents = defineCollection({
   loader: glob({
-    pattern: ["documents/**/*.md", "projects/*/docs/**/*.md"],
+    pattern: "projects/*/docs/**/*.md",
     base: "./src/content",
     generateId: ({ entry }) => documentIdFromPath(entry),
   }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    series: z.string(),
+    project: z.string(),
     language: z.enum(SUPPORTED_LOCALES).default("zh"),
     translationOf: z.string().optional(),
     updatedAt: z.coerce.date(),
@@ -200,9 +201,9 @@ const relatedNoteScope = z.object({
 
 const series = defineCollection({
   loader: glob({
-    pattern: ["series/**/*.md", "projects/*/series.md"],
-    base: "./src/content",
-    generateId: ({ entry }) => seriesIdFromPath(entry),
+    pattern: "**/*.md",
+    base: "./src/content/series",
+    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
   }),
   schema: z.object({
     title: z.string(),
@@ -211,8 +212,6 @@ const series = defineCollection({
     updatedAt: z.coerce.date(),
     featured: z.boolean().default(false),
     project: z.string().optional(),
-    kind: z.enum(["articles", "documentation"]).default("articles"),
-    relatedDocuments: z.array(z.string()).default([]),
     relatedArticles: z.array(z.string()).default([]),
     relatedNoteCategories: z.array(z.string()).default([]),
     relatedNoteScopes: z.array(relatedNoteScope).default([]),

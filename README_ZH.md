@@ -86,6 +86,6 @@ Inkerio 也支持在不使用 GitHub Pages 的情况下本地开发。执行 `np
 
 ### 项目 README 与 docs
 
-每个项目存放在 `src/content/projects/<id>/`：`project.md` 保存项目元数据，`README_ZH.md` 与 `README.md` 保存中英文介绍，`docs/` 保存章节（英文对应文件位于 `docs/en/`），`series.md` 保存系列元数据和章节顺序。README 是系列第一篇。项目、文档和普通文章共用 `ReadingLayout`、系列目录、本页目录、阅读工具和上下篇导航；仅内容存储与订阅归属不同。项目和文档不进入普通文章列表及文章 RSS。
+每个项目存放在 `src/content/projects/<id>/`：`project.md` 保存项目元数据及有序的 `documents` 章节 ID，`README_ZH.md` 与 `README.md` 保存中英文介绍，`docs/` 保存章节（英文对应文件位于 `docs/en/`）。README 是项目目录第一项。项目、文档和普通文章复用阅读布局、目录及导航组件，但项目文档不属于文章系列，不进入「系列」集合、系列列表和首页系列推荐，也不进入普通文章列表或文章 RSS。
 
-可选的引擎命令 `node scripts/sync-project-content.mjs --content-root /path/to/content` 同步公开仓库的 README 及 `docs/` 下全部 Markdown，保留子目录，匹配中英文并生成系列。配置位于 `src/data/project-sources.json`；`projects` 每项指定 `id`、`repository`（`owner/repo`）、固定的 40 位提交 `revision`、`files`（`zh`/`en` README 路径）和可选的 `routes` 映射。仅导入 README 时设置 `docs: false`。来源全部下载成功后才更新快照；构建和页面访问使用已提交的本地内容。
+项目首页为 `/projects/<id>/`，文档目录为 `/projects/<id>/docs/`，章节为 `/projects/<id>/docs/<chapter>/`，英文有对应路径。可选的引擎命令 `node scripts/sync-project-content.mjs --content-root /path/to/content` 同步公开仓库的 README 及 `docs/` 下全部 Markdown，保留子目录、匹配译文并更新 `project.md` 的章节顺序，不生成系列元数据。在 `src/data/project-sources.json` 的 `projects` 中配置 `id`、公开 `repository`（`owner/repo`）、固定的 40 位提交 `revision`、`files`（`zh`/`en` README 路径）和可选的 `routes` 映射；仅同步 README 时设置 `docs: false`。来源全部下载成功后才更新快照；构建和页面访问使用已提交的本地内容。

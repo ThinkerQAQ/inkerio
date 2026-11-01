@@ -1,30 +1,15 @@
 ---
 import type { Locale } from "../config/i18n";
+import { localizePath } from "../config/i18n";
 import ProjectLinkList from "./ProjectLinkList.astro";
-import { localizedSeriesSummary, seriesHref, type ProjectEntry, type SeriesEntry } from "../lib/content";
-
-interface Props { project: ProjectEntry; seriesEntries: SeriesEntry[]; locale: Locale }
-const { project, seriesEntries, locale } = Astro.props;
-const docs = seriesEntries.filter((entry) => entry.data.project === project.id && entry.data.kind === "documentation" && entry.data.relatedDocuments.length > 0);
+import type { ProjectEntry } from "../lib/content";
+interface Props { project: ProjectEntry; locale: Locale }
+const { project, locale } = Astro.props;
 ---
-{project.data.github.length > 0 && (
-  <section class="related-content" aria-labelledby="project-github-heading">
-    <h2 id="project-github-heading">GitHub</h2>
-    <ProjectLinkList entries={project.data.github} />
-  </section>
-)}
-{docs.length > 0 && (
-  <section class="related-content" aria-labelledby="project-documentation-heading">
-    <h2 id="project-documentation-heading">{locale === "en" ? "Documentation" : "文档"}</h2>
-    <ol class="content-list">
-      {docs.map((entry) => {
-        const translated = locale === "zh" || Boolean(entry.data.translations[locale]);
-        const summary = localizedSeriesSummary(entry, translated ? locale : "zh");
-        return <li><div class="content-list-main">
-          <a class="content-title" href={seriesHref(entry, translated ? locale : "zh")}>{summary.title}</a>
-          <p>{summary.description}</p>
-        </div><div class="content-meta"><span>{locale === "en" ? `${entry.data.relatedDocuments.length} documents` : `${entry.data.relatedDocuments.length} 篇文档`}</span></div></li>;
-      })}
-    </ol>
-  </section>
-)}
+{project.data.github.length > 0 && <section class="related-content" aria-labelledby="project-github-heading">
+  <h2 id="project-github-heading">GitHub</h2><ProjectLinkList entries={project.data.github} />
+</section>}
+{project.data.documents.length > 0 && <section class="related-content" aria-labelledby="project-documentation-heading">
+  <h2 id="project-documentation-heading">{locale === "en" ? "Documentation" : "文档"}</h2>
+  <ProjectLinkList label={locale === "en" ? "Documentation" : "项目文档"} entries={[{ title: locale === "en" ? "Browse project documentation" : "查看项目文档", url: localizePath(locale, `/projects/${project.id}/docs/`), description: locale === "en" ? `${project.data.documents.length} documents` : `${project.data.documents.length} 篇文档` }]} />
+</section>}

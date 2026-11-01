@@ -6,10 +6,9 @@ export function documentIdFromPath(entry) {
   const [, project, file] = match;
   return file.startsWith("en/") ? `en/${project}/${file.slice(3)}` : `${project}/${file}`;
 }
-export function seriesIdFromPath(entry) {
-  const source = entry.replaceAll("\\", "/").replace(/\.md$/i, "");
-  if (source.startsWith("series/")) return source.slice(7);
-  const match = source.match(/^projects\/([^/]+)\/series$/);
-  if (!match) throw new Error(`Invalid project series path: ${entry}`);
-  return `${match[1]}-docs`;
+export function projectDocumentSlug(document) {
+  const id = (document.data.translationOf ?? document.id).replace(/^en\//, "");
+  const prefix = `${document.data.project}/`;
+  if (!id.startsWith(prefix) || !id.slice(prefix.length) || id.split("/").some((part) => !part || part === "." || part === "..")) throw new Error(`Invalid project document ID: ${document.id}`);
+  return id.slice(prefix.length);
 }

@@ -3,29 +3,28 @@ import { render, type CollectionEntry } from "astro:content";
 import ReadingLayout from "../layouts/ReadingLayout.astro";
 import ProjectKnowledgeIndex from "./ProjectKnowledgeIndex.astro";
 import { type Locale } from "../config/i18n";
-import { localizedProjectSummary, projectHref, projectStatusLabel, type ProjectEntry, type SeriesEntry } from "../lib/content";
+import { localizedProjectSummary, projectHref, projectStatusLabel, type ProjectEntry } from "../lib/content";
 import { projectReadme, projectReadingCollection, projectReadingItems, projectSourceHref, type ProjectReadme } from "../lib/project-reading";
 import type { DocumentEntry } from "../lib/documentation";
-interface Props { project: ProjectEntry; locale: Locale; readmes: ProjectReadme[]; translations: CollectionEntry<"projectTranslations">[]; seriesEntries: SeriesEntry[]; documents: DocumentEntry[] }
-const { project, locale, readmes, translations, seriesEntries, documents } = Astro.props;
+interface Props { project: ProjectEntry; locale: Locale; readmes: ProjectReadme[]; translations: CollectionEntry<"projectTranslations">[]; documents: DocumentEntry[] }
+const { project, locale, readmes, translations, documents } = Astro.props;
 const readme = projectReadme(project, readmes, locale);
 const translation = translations.find((entry) => entry.data.translationOf === project.id && entry.data.language === locale);
 const entry = readme ?? translation ?? project;
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 const summary = localizedProjectSummary(project, locale);
-const series = seriesEntries.find((entry) => entry.data.project === project.id && entry.data.kind === "documentation");
 const path = projectHref(project, locale);
-const items = projectReadingItems(project, series, documents, locale);
+const items = projectReadingItems(project, documents, locale);
 const alternatives = [{ locale: "zh" as const, href: projectHref(project) }, ...Object.keys(project.data.translations).filter((lang) => lang === "en" && (projectReadme(project, readmes, "en") || translations.some((entry) => entry.data.translationOf === project.id && entry.data.language === "en"))).map(() => ({ locale: "en" as const, href: projectHref(project, "en") }))];
 ---
 <ReadingLayout title={summary.title} description={summary.description} locale={locale} canonicalPath={path}
   contentType="project" contentId={project.id} headings={headings} updatedAt={project.data.updatedAt}
   readingMinutes={Math.max(1, Math.ceil(Number(remarkPluginFrontmatter.readingMinutes) || 1))}
-  collection={projectReadingCollection(project, series, documents, locale, path)} next={items[1]}
+  collection={projectReadingCollection(project, documents, locale, path)} next={items[1]}
   languageAlternatives={alternatives} noindex={locale !== "zh" && !readme && !translation}
   markdownSourceUrl={readme && projectSourceHref("readmes", readme.id)}>
   <span slot="metadata">{projectStatusLabel(project.data.status, locale)}</span>
   {locale !== "zh" && !readme && !translation && <p class="source-note">The README is currently available in Chinese.</p>}
   <Content />
-  <ProjectKnowledgeIndex slot="afterBody" project={project} seriesEntries={seriesEntries} locale={locale} />
+  <ProjectKnowledgeIndex slot="afterBody" project={project} locale={locale} />
 </ReadingLayout>
