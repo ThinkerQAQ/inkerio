@@ -18,22 +18,22 @@
     umami?: {
       track: (eventName: string, data?: EventData) => unknown;
     };
-    __thinkerContentAnalyticsPageCleanup?: () => void;
-    __thinkerContentAnalyticsBootstrapCleanup?: () => void;
+    __inkerioContentAnalyticsPageCleanup?: () => void;
+    __inkerioContentAnalyticsBootstrapCleanup?: () => void;
   }
 
   const runtimeWindow = window as UmamiRuntimeWindow;
 
-  runtimeWindow.__thinkerContentAnalyticsBootstrapCleanup?.();
+  runtimeWindow.__inkerioContentAnalyticsBootstrapCleanup?.();
 
   let activeMarker: HTMLElement | null = null;
 
   const initializePageAnalytics = () => {
     const marker = document.querySelector<HTMLElement>("[data-analytics-content-type]");
-    if (marker && marker === activeMarker && runtimeWindow.__thinkerContentAnalyticsPageCleanup) return;
+    if (marker && marker === activeMarker && runtimeWindow.__inkerioContentAnalyticsPageCleanup) return;
 
-    runtimeWindow.__thinkerContentAnalyticsPageCleanup?.();
-    delete runtimeWindow.__thinkerContentAnalyticsPageCleanup;
+    runtimeWindow.__inkerioContentAnalyticsPageCleanup?.();
+    delete runtimeWindow.__inkerioContentAnalyticsPageCleanup;
     activeMarker = null;
     const readingContent = document.querySelector<HTMLElement>("[data-reading-content]");
     const readingStart = document.getElementById("reading-start");
@@ -246,7 +246,7 @@
 
     scheduleProgressSample();
 
-    runtimeWindow.__thinkerContentAnalyticsPageCleanup = () => {
+    runtimeWindow.__inkerioContentAnalyticsPageCleanup = () => {
       advanceActiveTime(performance.now());
       evaluateMilestones();
       flushPendingEvents();
@@ -266,16 +266,16 @@
   };
 
   const onPageLoad = () => initializePageAnalytics();
-  const onBeforeSwap = () => runtimeWindow.__thinkerContentAnalyticsPageCleanup?.();
+  const onBeforeSwap = () => runtimeWindow.__inkerioContentAnalyticsPageCleanup?.();
 
   document.addEventListener("astro:page-load", onPageLoad);
   document.addEventListener("astro:before-swap", onBeforeSwap);
 
   initializePageAnalytics();
 
-  runtimeWindow.__thinkerContentAnalyticsBootstrapCleanup = () => {
-    runtimeWindow.__thinkerContentAnalyticsPageCleanup?.();
-    delete runtimeWindow.__thinkerContentAnalyticsPageCleanup;
+  runtimeWindow.__inkerioContentAnalyticsBootstrapCleanup = () => {
+    runtimeWindow.__inkerioContentAnalyticsPageCleanup?.();
+    delete runtimeWindow.__inkerioContentAnalyticsPageCleanup;
     document.removeEventListener("astro:page-load", onPageLoad);
     document.removeEventListener("astro:before-swap", onBeforeSwap);
   };

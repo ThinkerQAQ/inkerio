@@ -26,7 +26,7 @@
     "test:boundary": "node scripts/assert-public-boundary.mjs",
     "test:public-content-safety": "node --test scripts/assert-public-content-safety.test.mjs && node scripts/assert-public-content-safety.mjs src/content",
     "test:diagrams": "npm run diagrams && node --test scripts/plantuml/plantuml.test.mjs scripts/mermaid/mermaid.test.mjs scripts/drawio/drawio.test.mjs src/markdown/mermaid.test.mjs",
-    "test:reading-experience": "node --test src/markdown/reading-time.test.mjs src/markdown/image-loading.test.mjs src/lib/content-analytics.test.mjs src/lib/floating-actions-runtime.test.mjs src/lib/content-media-viewer.test.mjs src/lib/recent-notes.test.mjs src/components/ContentReaction.test.mjs",
+    "test:reading-experience": "node --test src/markdown/reading-time.test.mjs src/markdown/image-loading.test.mjs src/lib/content-analytics.test.mjs src/lib/floating-actions-runtime.test.mjs src/lib/content-media-viewer.test.mjs src/lib/recent-notes.test.mjs src/components/ContentReaction.test.mjs && node --test src/components/OptionalIntegrations.test.mjs",
     "test:note-view": "node --test src/lib/note-source.test.mjs src/lib/article-source.test.mjs",
     "test:engine": "npm run test:assembler && npm run test:boundary && npm run test:public-content-safety && npm run test:reading-experience && npm run test:note-view && node --test scripts/build-sitemap-inventory.test.mjs && npm run test:identity && npm run test:site-features",
     "test": "npm run assemble:template && npm run test:engine && npm run check && npm run build",
