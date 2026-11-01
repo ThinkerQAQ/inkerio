@@ -1,6 +1,6 @@
 # Inkerio
 
-[English](README.md) · [公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template) · [拆分方案](docs/architecture/repository-boundaries.md) · [MIT License](LICENSE)
+[English](README.md) · [公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template) · [拆分方案](docs/architecture/repository-boundaries.md) · [源码 Releases](https://github.com/ThinkerQAQ/inkerio/releases) · [MIT License](LICENSE)
 
 **Inkerio 是基于 Astro 的中英文静态博客引擎**，支持文章、笔记、思维导图、项目、系列、摄影、RSS、Sitemap、增量索引清单和全文搜索。内容由独立仓库提供，不与引擎源码混存。
 
@@ -42,6 +42,12 @@ npm run build
 [site.config.json](site.config.json) 使用通用演示身份。部署时由专用站点仓库覆盖，不向公共引擎提交凭据、备案、Cookie 或真实内容。
 
 见[完整迁移顺序](docs/architecture/repository-boundaries.md)。原创引擎代码使用 [MIT](LICENSE)，第三方依赖及用户内容保留独立版权；参见[第三方声明](THIRD_PARTY_NOTICES.md)。
+
+## 独立引擎 Release
+
+Inkerio 的正式版本从 **[本仓库 Releases](https://github.com/ThinkerQAQ/inkerio/releases)** 下载，版本标签使用 `inkerio-v*`。GitHub 自动生成的 ZIP/TAR 是**通用引擎源码**，不打包个人文章、照片、私有配置、Node 依赖或跨平台 Go 程序。获取源码后需安装 Node.js/npm，再装配公开内容模板或自己的内容仓库。
+
+旧 `ThinkerQAQ.github.io` 仓库不再发布软件，其[历史版本统计](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/docs/legacy-releases.md)保留在迁移档案。SyndiRelay 是独立的分发工具，不是 Inkerio Release 的依赖。
 
 ## CLI 与 MCP（无需浏览器扩展）
 
