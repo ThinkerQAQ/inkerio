@@ -34,7 +34,7 @@ npm run build
 - **Inkerio**：通用页面、内容 Schema、Markdown/图表渲染、静态构建和搜索。
 - **inkerio-content-template**：公开虚构样例，不与个人网站集成仓库合并。
 - **blog-content**：你的真实文章、摄影及版权政策，保持独立 Private。
-- **SyndiRelay（独立私有仓库）**：可选的跨平台分发、CLI、Bridge、浏览器扩展与 MCP；引擎本身不依赖它。
+- [**SyndiRelay**](https://github.com/ThinkerQAQ/syndirelay)（独立开源仓库）：可选的跨平台分发、CLI、Bridge、浏览器扩展与 MCP；引擎本身不依赖它。
 - **ThinkerQAQ.github.io**：已经缩减为个人网站身份配置、域名验证文件、专属 Worker 与 CI/CD 部署。
 
 首页分类、笔记分类、RSS 和历史重定向详见[站点行为配置](docs/zh-CN/reference/site-features.md)。
@@ -43,11 +43,19 @@ npm run build
 
 见[完整迁移顺序](docs/architecture/repository-boundaries.md)。原创引擎代码使用 [MIT](LICENSE)，第三方依赖及用户内容保留独立版权；参见[第三方声明](THIRD_PARTY_NOTICES.md)。
 
-## 独立引擎 Release
+## 引擎源码发布
 
-Inkerio 的正式版本从 **[本仓库 Releases](https://github.com/ThinkerQAQ/inkerio/releases)** 下载，版本标签使用 `inkerio-v*`。GitHub 自动生成的 ZIP/TAR 是**通用引擎源码**，不打包个人文章、照片、私有配置、Node 依赖或跨平台 Go 程序。获取源码后需安装 Node.js/npm，再装配公开内容模板或自己的内容仓库。
+正式版本入口：[Inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases)。
+重新梳理后的独立源码版本从 `inkerio-v2.1.0` 开始。
+GitHub 提供的 ZIP/TAR 是**引擎源码**，不是开箱即用的网站安装包。
+须先安装 Node.js/npm，再装配[公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template)
+或自己的内容仓库。
 
-旧 `ThinkerQAQ.github.io` 仓库不再发布软件，其[历史版本统计](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/docs/legacy-releases.md)保留在迁移档案。SyndiRelay 是独立的分发工具，不是 Inkerio Release 的依赖。
+[SyndiRelay](https://github.com/ThinkerQAQ/syndirelay) 已独立开源，
+仅负责可选的内容分发，不是 Inkerio 构建和渲染的必需依赖。
+生产部署应固定经过测试的 **commit SHA**，而不是自动追踪最新版。
+文章、摄影与生产 Worker 分别由各自仓库维护。
+
 
 ## CLI 与 MCP（无需浏览器扩展）
 

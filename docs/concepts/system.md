@@ -25,7 +25,7 @@ The public [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-cont
 | Engine `scripts/` and `src/markdown/` | Content assembly, diagram rendering and static build support |
 | Engine `.github/workflows/` | Public sample validation without private credentials |
 | Site deployment wrapper | Site identity, verification assets, private content access, hosting, Workers and optional search notifications |
-| SyndiRelay (separate private project) | Optional off-site publication, article compilation, Bridge, MCP, browser integration and related search tools |
+| SyndiRelay (separate public-source project) | Optional off-site publication, article compilation, Bridge, MCP, browser integration and related search tools |
 
 Run `node scripts/assemble-content.mjs --content-root ../your-content-repo` in the engine root. This copies the source into ignored generated directories. Edit and commit writing in the content checkout, never the assembled copy. The static build writes `dist/` including Pagefind indexes, without requiring an online Go/Astro server at runtime.
 

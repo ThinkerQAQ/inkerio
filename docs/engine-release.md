@@ -1,14 +1,29 @@
-# Inkerio source releases / 引擎源码发布
+# Inkerio source releases / Inkerio 引擎源码版本
 
-Inkerio engine tags use `inkerio-v*`. Engine archives contain versioned source, the MIT license and third-party notices—not a compiled personal website, node_modules or private SyndiRelay executables. Install Node.js/npm and follow [Quick Start](quick-start.md) with the public template.
+The canonical download channel is [Inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases).
+The refreshed standalone source-release line starts at `inkerio-v2.1.0`.
+GitHub provides ZIP/TAR archives of the reusable Astro engine with committed
+MIT/third-party notices. This is a **source-only** release, not an installer,
+a complete personal website, or a bundled copy of SyndiRelay. It never
+contains the author's private writing, deployment secrets or `node_modules`.
 
-SyndiRelay is maintained in a separate repository. An Inkerio source release makes no claim about that application’s binary distribution, platform API authorization or licensing. Personal articles, photography and content permissions remain separate.
+1. Install Node.js 22.12+, npm and Git.
+2. Follow [Quick Start](quick-start.md) and assemble the
+   [public content template](https://github.com/ThinkerQAQ/inkerio-content-template).
+3. For production, pin the reviewed engine **commit SHA** in the site wrapper;
+   do not follow a mutable `latest` branch or tag.
+4. Content, static deployment, site-specific Workers and optional publishing
+   are separate concerns; see [repository boundaries](architecture/repository-boundaries.md).
 
-Inkerio 使用 `inkerio-v*` 标签，发行包仅含源码、MIT 许可及第三方声明；不打包个人网站、npm 依赖或私有 SyndiRelay 二进制。安装 Node.js/npm 后可按照快速开始运行公开模板。引擎源码发布不代表其他产品的二进制分发或第三方平台自动化已获得授权。
+## 中文说明
 
+正式发布入口为 [Inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases)。
+重新梳理后的独立源码版本从 `inkerio-v2.1.0` 开始。
+发行内容仅为可复用的 Astro 引擎**源码压缩包**，包含 MIT 许可证与
+已提交的第三方许可说明，不包含文章、生产密钥、`node_modules`、
+个人站点构建结果或 SyndiRelay 可执行程序。
 
-## Official release location / 正式版本位置
-
-Use [ThinkerQAQ/inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases). The historical `inkerio-v2.0.0` download previously attached to the **website wrapper** is superseded by this standalone engine repository; repository-scoped Git tags and Releases are different identities. Production wrappers should pin the audited engine **commit SHA**, not follow a mutable `latest` URL. Do not redistribute the site's private content or bundle a SyndiRelay executable inside an Inkerio source release.
-
-正式下载入口是 [inkerio 仓库 Releases](https://github.com/ThinkerQAQ/inkerio/releases)。旧站点仓库内同名 `inkerio-v2.0.0` 历史附件不再作为正式发行包。站点生产工作流继续固定经过 CI 验证的 **commit SHA**，不要在生产自动跟踪 `latest`。源代码包不包含私有内容与 SyndiRelay 安装程序。
+安装 Node.js 22.12+、npm、Git 后，按照[快速开始](zh-CN/quick-start.md)
+装配[内容模板](https://github.com/ThinkerQAQ/inkerio-content-template)。
+生产部署应固定经过 CI 验证的 Git commit SHA，站点 Worker、内容仓库及
+分发工具分别维护。
