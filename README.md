@@ -70,12 +70,3 @@ A custom domain is configured through GitHub Pages settings and the `url` field 
 **Live example:** [thinkerqaq.com](https://thinkerqaq.com/) runs on Inkerio. Its [ThinkerQAQ.github.io repository](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) shows a more advanced production architecture with separate content, a site wrapper, optional Workers, and GitHub Pages/EdgeOne deployment. It is a **reference implementation**, not the starter template. New users should start with the single-repository Content Template.
 
 **License:** Inkerio's original engine source is [MIT](LICENSE). Personal writing, photographs, content-template examples and third-party dependencies have separate rights; see [third-party notices](THIRD_PARTY_NOTICES.md). Production sites should pin a validated engine commit, not track a mutable branch without verification.
-
-
-
-
-### Project README and docs
-
-Keep each project in `src/content/projects/<id>/`: `project.md` holds project metadata and the ordered `documents` IDs; `README_ZH.md` and `README.md` hold the bilingual introduction; `docs/` holds chapters (English counterparts in `docs/en/`). README is the first item in the project outline. Project READMEs, manuals and ordinary articles share the reading layout, TOC and navigation components, but projects are not article series. They are excluded from the Series collection, series listings and homepage series recommendations, as well as ordinary article listings and article RSS.
-
-Project pages live at `/projects/<id>/`, documentation contents at `/projects/<id>/docs/`, and chapters at `/projects/<id>/docs/<chapter>/`, with matching English routes. The optional engine command `node scripts/sync-project-content.mjs --content-root /path/to/content` imports public README files and all Markdown under a repository’s `docs/`, preserves subdirectories, pairs translations, and updates `project.md` chapter order without creating series metadata. Configure `src/data/project-sources.json` with `projects` entries containing `id`, public `repository` (`owner/repo`), pinned 40-character `revision`, `files` (`zh`/`en` README paths), and optional `routes` mappings. Set `docs: false` for README-only sync. All downloads finish before snapshots change; builds and page requests use committed local content.

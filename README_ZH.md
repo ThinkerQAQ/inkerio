@@ -80,12 +80,3 @@ Inkerio 也支持在不使用 GitHub Pages 的情况下本地开发。执行 `np
 **实际案例（Live Example）：** [thinkerqaq.com](https://thinkerqaq.com/) 使用 Inkerio 构建，其 [ThinkerQAQ.github.io](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) 仓库展示了更复杂的生产环境方案，包括独立内容仓库、网站部署包装层、Worker 及 GitHub Pages/EdgeOne。这是可参考的**生产实践**，不是要求新用户直接复制的建站模板。普通用户应优先使用单仓库内容模板。
 
 **版权：** Inkerio 原创引擎代码采用 [MIT](LICENSE)；用户文章、摄影、模板演示素材与第三方依赖各有不同的权利边界，详见 [第三方说明](THIRD_PARTY_NOTICES.md)。生产环境建议固定已经验证的引擎提交版本，避免不经验证地自动追踪 `main`。
-
-
-
-
-### 项目 README 与 docs
-
-每个项目存放在 `src/content/projects/<id>/`：`project.md` 保存项目元数据及有序的 `documents` 章节 ID，`README_ZH.md` 与 `README.md` 保存中英文介绍，`docs/` 保存章节（英文对应文件位于 `docs/en/`）。README 是项目目录第一项。项目、文档和普通文章复用阅读布局、目录及导航组件，但项目文档不属于文章系列，不进入「系列」集合、系列列表和首页系列推荐，也不进入普通文章列表或文章 RSS。
-
-项目首页为 `/projects/<id>/`，文档目录为 `/projects/<id>/docs/`，章节为 `/projects/<id>/docs/<chapter>/`，英文有对应路径。可选的引擎命令 `node scripts/sync-project-content.mjs --content-root /path/to/content` 同步公开仓库的 README 及 `docs/` 下全部 Markdown，保留子目录、匹配译文并更新 `project.md` 的章节顺序，不生成系列元数据。在 `src/data/project-sources.json` 的 `projects` 中配置 `id`、公开 `repository`（`owner/repo`）、固定的 40 位提交 `revision`、`files`（`zh`/`en` README 路径）和可选的 `routes` 映射；仅同步 README 时设置 `docs: false`。来源全部下载成功后才更新快照；构建和页面访问使用已提交的本地内容。
