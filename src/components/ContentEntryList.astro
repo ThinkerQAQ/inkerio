@@ -1,0 +1,16 @@
+---
+import { LOCALES, type Locale } from "../config/i18n";
+import { formatDate } from "../lib/content";
+interface Props {
+  items: Array<{ href: string; title: string; description: string; language: Locale; updatedAt: Date; label: string; draft?: boolean }>;
+  locale: Locale; emptyMessage: string;
+}
+const { items, locale, emptyMessage } = Astro.props;
+---
+{items.length === 0 ? <p class="empty-state">{emptyMessage}</p> : <ol class="content-list">
+  {items.map((entry) => <li><div class="content-list-main">
+    <a class="content-title" href={entry.href} lang={LOCALES[entry.language].htmlLang}>{entry.title}</a>
+    {entry.draft && <span class="draft-badge">{locale === "en" ? "Draft" : "草稿"}</span>}
+    <p lang={LOCALES[entry.language].htmlLang}>{entry.description}</p>
+  </div><div class="content-meta"><span>{entry.label}</span><time datetime={entry.updatedAt.toISOString()}>{formatDate(entry.updatedAt, locale)}</time></div></li>)}
+</ol>}

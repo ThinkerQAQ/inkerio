@@ -1,0 +1,70 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import ReadingExperience from "../components/ReadingExperience.astro";
+import MobileReadingNavigation from "../components/MobileReadingNavigation.astro";
+import ContentCollectionIndex from "../components/ContentCollectionIndex.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import ContentViewSwitcher from "../components/ContentViewSwitcher.astro";
+import PreviousNextNavigation from "../components/PreviousNextNavigation.astro";
+import ContentAnalyticsRuntime from "../components/ContentAnalyticsRuntime.astro";
+import ContentMediaViewer from "../components/ContentMediaViewer.astro";
+import { LOCALES, type Locale, type LocaleAlternative } from "../config/i18n";
+import { READING_EXPERIENCE_UI } from "../config/i18n-features";
+import { formatDate } from "../lib/content";
+import type { ReadingCollection, ReadingLink } from "../lib/reading";
+interface Props {
+  title: string; description: string; locale: Locale; canonicalPath: string;
+  contentType?: "article" | "project" | "documentation";
+  contentId?: string; seriesId?: string;
+  headings: Array<{ depth: number; slug: string; text: string }>;
+  readingMinutes: number; publishedAt?: Date; updatedAt?: Date; draft?: boolean; noindex?: boolean;
+  languageAlternatives?: LocaleAlternative[];
+  collection?: ReadingCollection; previous?: ReadingLink; next?: ReadingLink;
+  image?: string; socialImage?: string; imageAlt?: string;
+  markdownSourceUrl?: string; defaultView?: "markdown" | "mindmap";
+}
+const { title, description, locale, canonicalPath, contentType = "article", contentId, seriesId,
+  headings, readingMinutes, publishedAt, updatedAt, draft = false, noindex = false,
+  languageAlternatives, collection, previous, next, image, socialImage, imageAlt,
+  markdownSourceUrl, defaultView = "markdown" } = Astro.props;
+const ui = LOCALES[locale].ui;
+---
+<BaseLayout title={title} description={description} type={contentType === "article" ? "article" : "website"}
+  canonicalPath={canonicalPath} locale={locale} languageAlternatives={languageAlternatives}
+  noindex={draft || noindex} image={socialImage ?? image} imageAlt={imageAlt}>
+  <slot name="head" slot="head" />
+  <div class:list={["shell", "content-shell", { "content-shell--with-series": collection }]}>
+    <ReadingExperience locale={locale} />
+    <MobileReadingNavigation collection={collection} collectionTabLabel={collection?.label ?? ui.seriesLabel} headings={headings} locale={locale} />
+    {collection && <ContentCollectionIndex {...collection} ariaLabel={collection.label}
+      hideLabel={contentType === "article" ? (locale === "en" ? "Hide series articles" : "隐藏系列文章") : (locale === "en" ? "Hide project documentation" : "隐藏项目文档")}
+      restoreLabel={contentType === "article" ? (locale === "en" ? "Show series articles" : "展开系列文章") : (locale === "en" ? "Show project documentation" : "展开项目文档")} />}
+    <article class="note" data-pagefind-body data-pagefind-filter={`type:${contentType === "article" ? "Article" : contentType === "project" ? "Project" : "Documentation"}`}
+      data-analytics-content-type={contentType === "article" ? "article" : undefined}
+      data-analytics-lang={locale} data-analytics-series={seriesId} data-content-id={contentId}>
+      <header class="note-header">
+        {draft && <p class="eyebrow">{ui.draftPreview}</p>}
+        <h1 data-pagefind-meta="title">{title}</h1>
+        <p class="note-description">{description}</p>
+        <div class="note-meta">
+          <span data-pagefind-filter="language">{LOCALES[locale].label}</span>
+          {publishedAt && <span>{draft ? ui.draftDate : ui.publishedAt}{" "}<time datetime={publishedAt.toISOString()}>{formatDate(publishedAt, locale)}</time></span>}
+          {updatedAt && <span>{ui.updatedAt} {formatDate(updatedAt, locale)}</span>}
+          <span>{READING_EXPERIENCE_UI[locale].readingTime(readingMinutes)}</span>
+          <slot name="metadata" />
+        </div>
+        <slot name="headerContext" />
+      </header>
+      {image && <figure class="article-cover"><img src={image} alt={imageAlt ?? ""} width="1200" height="630" loading="eager" fetchpriority="high" /></figure>}
+      <div id="reading-start" class="reading-anchor" aria-hidden="true"></div>
+      {markdownSourceUrl ? <ContentViewSwitcher title={title} defaultView={defaultView} locale={locale} markdownSourceUrl={markdownSourceUrl}><div class="prose"><slot /></div></ContentViewSwitcher> : <div class="prose"><slot /></div>}
+      <div id="reading-end" class="reading-anchor" aria-hidden="true"></div>
+      <slot name="afterBody" />
+      {(previous || next) && <PreviousNextNavigation previous={previous} next={next} ariaLabel={ui.seriesNavigation} itemLabel="" previousLabel={ui.previousArticle} nextLabel={ui.nextArticle} />}
+      <slot name="afterNavigation" />
+    </article>
+    <TableOfContents headings={headings} locale={locale} />
+  </div>
+  <ContentAnalyticsRuntime />
+  <ContentMediaViewer locale={locale} />
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+import DocumentLayout from "../../../../layouts/DocumentLayout.astro";
+import { validateDocuments } from "../../../../lib/documentation";
+import { projectDocumentSlug } from "../../../../lib/project-paths.mjs";
+export async function getStaticPaths() {
+  const documents = await getCollection("documents");
+  const projects = await getCollection("projects");
+  validateDocuments(documents, projects);
+  return documents.filter((entry) => entry.data.language === "zh").map((document) => ({
+    params: { project: document.data.project, slug: projectDocumentSlug(document) },
+    props: { document, documents, project: projects.find((entry) => entry.id === document.data.project)! },
+  }));
+}
+const { document, documents, project } = Astro.props;
+---
+<DocumentLayout document={document} documents={documents} project={project} />

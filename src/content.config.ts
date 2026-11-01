@@ -1,3 +1,4 @@
+import { documentIdFromPath } from "./lib/project-paths.mjs";
 import { defineCollection, reference } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
@@ -143,9 +144,9 @@ const projectLocalizedSummary = localizedSummary.extend({
 
 const projects = defineCollection({
   loader: glob({
-    pattern: "**/*.md",
+    pattern: ["*.md", "*/project.md"],
     base: "./src/content/projects",
-    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
+    generateId: ({ entry }) => entry.replace(/\/project\.md$/i, "").replace(/\.md$/i, "").replaceAll("\\", "/"),
   }),
   schema: z.object({
     title: z.string(),
@@ -162,7 +163,33 @@ const projects = defineCollection({
     })).default([]),
     tutorials: z.array(projectResource).default([]),
     documentation: z.array(projectResource).default([]),
+    documents: z.array(z.string()).default([]),
     translations: z.record(z.string(), projectLocalizedSummary).default({}),
+  }),
+});
+
+const projectReadmes = defineCollection({
+  loader: glob({
+    pattern: ["*/README.md", "*/README_ZH.md"],
+    base: "./src/content/projects",
+    generateId: ({ entry }) => entry.replace(/\.md$/i, ""),
+  }),
+  schema: z.object({ project: z.string(), language: z.enum(SUPPORTED_LOCALES) }),
+});
+
+const documents = defineCollection({
+  loader: glob({
+    pattern: "projects/*/docs/**/*.md",
+    base: "./src/content",
+    generateId: ({ entry }) => documentIdFromPath(entry),
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    project: z.string(),
+    language: z.enum(SUPPORTED_LOCALES).default("zh"),
+    translationOf: z.string().optional(),
+    updatedAt: z.coerce.date(),
   }),
 });
 
@@ -238,4 +265,4 @@ const workoutSummaries = defineCollection({
   }).strict(),
 });
 
-export const collections = { pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };
+export const collections = { projectReadmes, documents, pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };

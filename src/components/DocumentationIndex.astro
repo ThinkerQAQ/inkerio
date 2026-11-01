@@ -1,0 +1,11 @@
+---
+import type { Locale } from "../config/i18n";
+import type { ProjectEntry } from "../lib/content";
+import type { DocumentEntry } from "../lib/documentation";
+import { projectReadingItems } from "../lib/project-reading";
+import ContentEntryList from "./ContentEntryList.astro";
+interface Props { project: ProjectEntry; documents: DocumentEntry[]; locale: Locale }
+const { project, documents, locale } = Astro.props;
+const items = projectReadingItems(project, documents, locale);
+---
+<ContentEntryList items={items.map((item) => ({ ...item, label: item.language === "en" ? "English" : "文档" }))} locale={locale} emptyMessage={locale === "en" ? "Documentation is being prepared." : "文档正在整理中。"} />

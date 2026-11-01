@@ -1,0 +1,20 @@
+---
+import { render } from "astro:content";
+import ReadingLayout from "./ReadingLayout.astro";
+import type { ProjectEntry } from "../lib/content";
+import { documentAlternatives, documentHref, type DocumentEntry } from "../lib/documentation";
+import { projectReadingCollection, projectReadingItems, projectSourceHref } from "../lib/project-reading";
+interface Props { document: DocumentEntry; documents: DocumentEntry[]; project: ProjectEntry }
+const { document, documents, project } = Astro.props;
+const locale = document.data.language;
+const path = documentHref(document);
+const items = projectReadingItems(project, documents, locale);
+const index = items.findIndex((entry) => entry.href === path);
+const { Content, headings, remarkPluginFrontmatter } = await render(document);
+---
+<ReadingLayout title={document.data.title} description={document.data.description} locale={locale} canonicalPath={path}
+  contentType="documentation" contentId={document.id} headings={headings}
+  readingMinutes={Math.max(1, Math.ceil(Number(remarkPluginFrontmatter.readingMinutes) || 1))}
+  updatedAt={document.data.updatedAt} languageAlternatives={documentAlternatives(document, documents)}
+  collection={projectReadingCollection(project, documents, locale, path)} previous={items[index - 1]} next={items[index + 1]}
+  markdownSourceUrl={projectSourceHref("docs", document.id)}><Content /></ReadingLayout>
