@@ -36,18 +36,26 @@ The content repository must provide `src/content/`; it may include `public/media
 | **Inkerio** (here) | Astro pages, schema, Markdown/diagram rendering, content assembly and static-site build |
 | **inkerio-content-template** | Fictional/sample articles, photographs and policy |
 | **Your content repository** | Real writing, photos, About page and content copyright policy; can be private |
-| **SyndiRelay** (private, independent) | Optional article syndication, CLI, MCP, Bridge and browser extension; not required by Inkerio |
+| [**SyndiRelay**](https://github.com/ThinkerQAQ/syndirelay) (public source, independent) | Optional article syndication, CLI, MCP, Bridge and browser extension; not required by Inkerio |
 | **Deployment wrapper** | Domain, branding, `site.config.json`, verification files, CI secrets and Pages/EdgeOne deployment |
 
 See [site behavior options](docs/reference/site-features.md) for homepage categories, note taxonomy, RSS, and legacy redirects.
 
 The checked-in [site.config.json](site.config.json) holds **generic demonstration settings** including `descriptionEn` for English SEO. Site owners replace it at build time rather than editing reusable engine source. Comments and analytics are optional.
 
-## Versioned source releases
+## Source releases
 
-The official Inkerio downloads now live in **[this engine repository's Releases](https://github.com/ThinkerQAQ/inkerio/releases)**, not in `ThinkerQAQ.github.io`. Engine tags use `inkerio-v*`; GitHub's source ZIP/TAR archive contains reusable engine source and MIT/third-party notices, not a ready-to-run personal blog, user content, a browser Extension or publisher binaries. Install Node.js/npm, then assemble the public content template or your own content repository.
+Download versioned **engine source** from [Inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases).
+The refreshed standalone source-release line starts at `inkerio-v2.1.0`.
+The GitHub ZIP/TAR contains reusable source, not an installer or a deployed personal website.
+Install Node.js/npm and assemble the [public content template](https://github.com/ThinkerQAQ/inkerio-content-template)
+or your own repository. [SyndiRelay](https://github.com/ThinkerQAQ/syndirelay)
+is an optional, separately maintained public-source distribution project;
+it is neither bundled with Inkerio nor required for rendering.
 
-SyndiRelay is a separate optional publishing project; its older BlogCTL binaries must not be confused with an Inkerio Release. The [former website repository release history](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/docs/legacy-releases.md) is preserved as a migration record, not a current download channel.
+Production deployments should pin a validated **commit SHA**, not follow a
+moving release or branch reference. Real writing, photographs and live
+Workers remain in their respective repositories.
 
 ## Development
 

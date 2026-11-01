@@ -25,7 +25,7 @@ flowchart TD
 | 引擎 `scripts/` | 内容装配、图表预渲染、索引构建 |
 | 引擎 `.github/workflows/` | 仅使用公开样例的 CI 验证 |
 | 站点部署仓库 | 站点名称、域名、验证资源、私有内容权限、Worker 与托管部署 |
-| SyndiRelay（独立私有项目） | 可选的站外分发、Bridge、MCP、浏览器扩展及搜索提交工具 |
+| SyndiRelay（源码公开的独立项目） | 可选的站外分发、Bridge、MCP、浏览器扩展及搜索提交工具 |
 
 在引擎根目录运行 `node scripts/assemble-content.mjs --content-root ../blog-content`，将源内容复制到 Git 忽略的生成目录；原始内容仍在自己的仓库中维护。`npm run build` 生成 `dist/`，包含 Pagefind 索引；部署后无需常驻 Astro 或 Go 服务。
 
