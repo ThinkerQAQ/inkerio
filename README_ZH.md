@@ -32,7 +32,7 @@
 
 其中 `url` 与自己的网站地址保持一致，不能保留示例用户名；未修改的作者和域名占位符会导致构建失败，以免误发布。
 
-自己的文章放在 `src/content/articles/`，笔记在 `src/content/notes/`，关于页面在 `src/content/pages/`，图片在 `public/media/`。中英文版权策略统一维护在 `src/content/site/copyright.json`，不要把示例授权说明当成自己的版权声明。
+公开部署之前必须替换模板里的演示文章、摄影图片、虚构运动记录、About 与示例版权配置。GitHub Pages 工作流会拦截仍然保留的演示素材，具体路径见新建仓库 README 中的 `check-publication.mjs`。自己的文章放在 `src/content/articles/`，笔记在 `src/content/notes/`，关于页面在 `src/content/pages/`，图片在 `public/media/`。中英文版权策略统一维护在 `src/content/site/copyright.json`，不要把示例授权说明当成自己的版权声明。
 
 ### 3. 自动部署 GitHub Pages
 
@@ -66,6 +66,10 @@ npx --no-install astro dev --port 4321
 ```
 
 访问 http://localhost:4321 即可预览**自己的博客**。`npm run dev:quick` 是演示模板预览命令，不能用它取代自己的内容装配。需要正式本地构建时，先装配内容，再执行 `npm run check` 和 `npm run build`。
+
+## 引擎 CLI 与 MCP（可选）
+
+Inkerio 也支持在不使用 GitHub Pages 的情况下本地开发。执行 `npm ci`、`npm run tools:build` 后，可以通过 `node .inkerio-tools/cli.js status` 查看状态，通过 `validate --content-root /绝对路径/blog` 校验内容，或者执行 `build`、`preview --port 4321`。MCP 客户端可以启动本地 STDIO 服务：`node /绝对路径/inkerio/.inkerio-tools/mcp.js`。通过 `INKERIO_CONTENT_ROOT` 指定允许访问的内容仓库，具有文件写入副作用的工具还需要本机设置 `INKERIO_MCP_ALLOW_MUTATIONS=1`。这不是第三方文章分发接口。
 
 ## 可选配置与项目关系
 

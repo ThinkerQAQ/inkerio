@@ -59,6 +59,10 @@ npx --no-install astro dev --port 4321
 
 Open http://localhost:4321. This uses **your** content; `npm run dev:quick` intentionally loads demonstration content instead. To build a deployable site locally, run `npm run check` and `npm run build` after content assembly.
 
+## Engine CLI and MCP (optional)
+
+The engine is also usable independently of GitHub Pages. After `npm ci`, run `npm run tools:build`, then use `node .inkerio-tools/cli.js status`, `validate --content-root /absolute/path/to/blog`, `build`, or `preview --port 4321` as needed. MCP clients can start the local stdio adapter with `node /absolute/path/to/inkerio/.inkerio-tools/mcp.js`. `INKERIO_CONTENT_ROOT` selects the permitted content checkout; file-writing MCP tools additionally require `INKERIO_MCP_ALLOW_MUTATIONS=1`. These interfaces are local development tools, not third-party publishing services.
+
 ## Optional customization and integrations
 
 A custom domain is configured through GitHub Pages settings and the `url` field in your content repository. Analytics and reactions are optional integrations, not requirements for blogging. If you later want to distribute articles to other platforms, [SyndiRelay](https://github.com/ThinkerQAQ/syndirelay) can read the **same** content repository without changing the Inkerio build.

@@ -4,7 +4,8 @@ import path from "node:path";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 
-const roots = ["docs"];
+// User-facing documentation lives in the bilingual README files.
+const roots = [];
 const entrypoints = ["README.md", "README_ZH.md", "AGENTS.md", "THIRD_PARTY_NOTICES.md"];
 const documents = [...entrypoints];
 
