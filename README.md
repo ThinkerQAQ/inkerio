@@ -1,6 +1,6 @@
 # Inkerio
 
-[简体中文](README_ZH.md) · [Content template](https://github.com/ThinkerQAQ/inkerio-content-template) · [Repository boundaries](docs/architecture/repository-boundaries.md) · [MIT License](LICENSE)
+[简体中文](README_ZH.md) · [Content template](https://github.com/ThinkerQAQ/inkerio-content-template) · [Repository boundaries](docs/architecture/repository-boundaries.md) · [Source Releases](https://github.com/ThinkerQAQ/inkerio/releases) · [MIT License](LICENSE)
 
 **Inkerio** is a bilingual static blog engine built with Astro. It renders articles, notes and mind maps, projects, series, photography, RSS, sitemaps, incremental sitemap inventory and full-text search from a separately owned content repository.
 
@@ -42,6 +42,12 @@ The content repository must provide `src/content/`; it may include `public/media
 See [site behavior options](docs/reference/site-features.md) for homepage categories, note taxonomy, RSS, and legacy redirects.
 
 The checked-in [site.config.json](site.config.json) holds **generic demonstration settings** including `descriptionEn` for English SEO. Site owners replace it at build time rather than editing reusable engine source. Comments and analytics are optional.
+
+## Versioned source releases
+
+The official Inkerio downloads now live in **[this engine repository's Releases](https://github.com/ThinkerQAQ/inkerio/releases)**, not in `ThinkerQAQ.github.io`. Engine tags use `inkerio-v*`; GitHub's source ZIP/TAR archive contains reusable engine source and MIT/third-party notices, not a ready-to-run personal blog, user content, a browser Extension or publisher binaries. Install Node.js/npm, then assemble the public content template or your own content repository.
+
+SyndiRelay is a separate optional publishing project; its older BlogCTL binaries must not be confused with an Inkerio Release. The [former website repository release history](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/docs/legacy-releases.md) is preserved as a migration record, not a current download channel.
 
 ## Development
 
