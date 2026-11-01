@@ -19,21 +19,17 @@ Inkerio is an Astro-based bilingual blog engine. It renders Markdown articles, n
 
 ## 2. Quick Start
 
-Publish your first GitHub Pages blog, from creating a repository to opening the website.
-
-You need a GitHub account. GitHub Actions runs the build.
+Use your GitHub account to publish your first article.
 
 ### 2.1. Create your blog repository
 
 Open [Content Template](https://github.com/ThinkerQAQ/inkerio-content-template) and select **Use this template → Create a new repository**.
 
-Choose your account as owner and name the repository `YOUR_USERNAME.github.io`, using your GitHub username in lowercase. For example, `alice` creates `alice.github.io`. Select **Public** when using GitHub Free.
-
-This repository holds your content, images, configuration and deployment workflow.
+Choose your account as owner and name the repository `YOUR_USERNAME.github.io`, using your GitHub username in lowercase. For example, `alice` creates `alice.github.io`. Select **Public** when using GitHub Free, then click **Create repository**.
 
 ### 2.2. Configure your site
 
-Edit `site.config.json` in your new repository:
+In your new repository, open `site.config.json`, select Edit, update these fields and commit to `main`:
 
 ```json
 {
@@ -49,24 +45,43 @@ Replace the example identity and address with your own. The build rejects unchan
 
 ### 2.3. Replace the example content
 
-Replace or remove bundled examples and add your own content using the directory structure in [3.2](#32-content-directories).
+In the blog repository you just created:
 
-Use a sample Markdown file as a format reference, preserving required frontmatter when writing your own. Update both About pages and the copyright policy. Replace or remove fictional workout records and sample photos.
+1. Remove example files from `articles/`, `notes/`, `note-translations/`, `series/`, `projects/`, `life/` and `workout-summaries/` under `src/content/`. Add an empty `.gitkeep` file to any empty directory to preserve its structure.
+2. Remove demo images from `public/media/articles/sample-article/` and `public/media/life/sample-album/`.
+3. Edit the titles, descriptions and body text in `src/content/pages/about.md` and `src/content/pages/en/about.md`; keep their frontmatter fields and language values.
+4. Update both languages in `src/content/site/copyright.json`, replacing the sample author and removing example-policy notices.
 
-The workflow runs `node scripts/check-publication.mjs` before deployment. It blocks bundled demo content and reports the remaining paths. These examples are licensed for local preview; see the template's [copyright notice](https://github.com/ThinkerQAQ/inkerio-content-template/blob/main/COPYRIGHT.md).
+Upload your own cover to `public/media/hello/cover.jpg`, then create `src/content/articles/hello.md`:
+
+```markdown
+---
+title: "Hello Inkerio"
+description: "My first post."
+publishedAt: "2026-01-01T00:00:00Z"
+language: zh
+status: published
+coverImage: "/media/hello/cover.jpg"
+coverImageAlt: "My cover image"
+---
+
+Hello Inkerio!
+```
+
+Replace the date, body and cover description, then commit to `main`. Published articles require `coverImage` and `coverImageAlt`; image paths start with `/media/`, without `public`.
+
+Do not keep `sample-*` filenames: the publication check blocks them even after editing their contents. See the template's [copyright notice](https://github.com/ThinkerQAQ/inkerio-content-template/blob/main/COPYRIGHT.md) for demo-material terms.
 
 ### 2.4. Deploy to GitHub Pages
 
 1. In your blog repository, open **Settings → Pages → Build and deployment** and set **Source** to **GitHub Actions**.
-2. Commit your configuration and content changes to `main`.
-3. Open **Actions → Deploy my Inkerio blog to GitHub Pages**. If no run appears, select **Run workflow**.
-4. Wait for both build and deployment jobs to succeed.
-
-The workflow installs dependencies, checks configuration and content, builds the site and deploys it using GitHub's built-in permissions.
+2. Open **Actions** and enable workflows if prompted.
+3. Select **Deploy my Inkerio blog to GitHub Pages → Run workflow**, choose `main` and start a fresh deployment.
+4. Wait for this run's build and deployment jobs to succeed.
 
 ### 2.5. Check the website
 
-Open your site, for example `https://alice.github.io/`. Check the home page, an article and its images, then open `https://alice.github.io/en/` to check the English home page.
+Open your site, for example `https://alice.github.io/`. Open Hello Inkerio and check its text and cover, then visit `/en/` to check the English home page.
 
 ### 2.6. Troubleshooting
 
@@ -75,9 +90,6 @@ Open your site, for example `https://alice.github.io/`. Check the home page, an 
 | Deployment reports demo content | Replace or remove every reported example path, including media, About pages and copyright settings; commit again |
 | Configuration validation fails | Replace placeholders and ensure `url` matches your actual site address |
 | No deployment run | Set the Pages source to GitHub Actions, then run the deployment workflow manually |
-| Preview shows sample content | Configure your blog and assemble it with `--content-root ../my-blog`; `npm run dev:quick` loads the demo template |
-| Content changes do not appear locally | Rerun assembly and restart the preview |
-| Local diagram rendering fails | Install the prerequisites used by the template's deployment workflow; CI provides the configured build environment |
 
 If the problem persists, [open an Issue](https://github.com/ThinkerQAQ/inkerio/issues) with the failing step, error message and engine commit. Remove credentials and private content from logs first.
 
@@ -115,7 +127,9 @@ Edit Markdown or images in these directories and commit to `main` to publish. A 
 
 ### 4.1. Case 1: Preview and build locally
 
-Install Git, Node.js and npm. Use the Node.js version in the [CI configuration](.github/workflows/ci.yml). Clone the engine and your blog as sibling directories:
+Complete Quick Start first. Install Git, Node.js and npm; use the Node.js version in the [CI configuration](.github/workflows/ci.yml).
+
+In your blog's `.github/workflows/deploy.yml`, find the `ref` under **Checkout pinned Inkerio engine**. Replace `ENGINE_COMMIT` below with that commit and `YOUR_USERNAME` with your GitHub username:
 
 ```bash
 mkdir inkerio-workspace
@@ -123,7 +137,9 @@ cd inkerio-workspace
 git clone https://github.com/ThinkerQAQ/inkerio.git
 git clone https://github.com/YOUR_USERNAME/YOUR_USERNAME.github.io.git my-blog
 cd inkerio
+git checkout ENGINE_COMMIT
 npm ci
+node ../my-blog/scripts/check-publication.mjs
 node ../my-blog/scripts/configure-site.mjs --engine .
 node scripts/assemble-content.mjs --content-root ../my-blog
 npx --no-install astro dev --port 4321
@@ -139,7 +155,9 @@ npm run build
 npm run preview
 ```
 
-Open `http://localhost:4321` to inspect the production build. Diagram rendering may require Java, Graphviz and browser libraries; the template deployment workflow installs these on CI.
+Open `http://localhost:4321` to inspect the build. Use the assembly command above for your content; `npm run dev:quick` loads the demo template.
+
+Local diagram rendering needs additional dependencies: Java and Graphviz for PlantUML, browser libraries for Mermaid. See the template's [deployment workflow](https://github.com/ThinkerQAQ/inkerio-content-template/blob/main/.github/workflows/deploy.yml) for setup; GitHub Actions already provides them.
 
 ### 4.2. Case 2: Use a custom domain
 
@@ -147,7 +165,7 @@ Set `site.config.json` → `url` to your HTTPS domain. Configure **Settings → 
 
 ### 4.3. Case 3: Use CLI or MCP
 
-From the engine directory:
+Complete [4.1](#41-case-1-preview-and-build-locally), stop the preview with Ctrl+C, then run from the engine directory:
 
 ```bash
 npm run tools:build
@@ -155,21 +173,23 @@ node .inkerio-tools/cli.js status
 node .inkerio-tools/cli.js validate --content-root /absolute/path/to/my-blog
 ```
 
+Replace `/absolute/path/to/my-blog` with the absolute path to your local blog repository.
+
 The CLI also supports `assemble`, `check`, `build`, `diagrams`, `routes` and `preview`. Run `node .inkerio-tools/cli.js --help` for arguments. Run configuration and content assembly before building; `preview` serves an existing build.
 
 For an MCP client, set the command to `node`, pass the absolute path to `.inkerio-tools/mcp.js` as its argument, and set `INKERIO_CONTENT_ROOT` to your blog checkout. File-writing tools additionally require `INKERIO_MCP_ALLOW_MUTATIONS=1`.
 
-### 4.4. Case 4: Add analytics or article distribution
+### 4.4. Case 4: Distribute articles
 
-Analytics, reactions and comments are optional. To distribute articles to other platforms, [SyndiRelay](https://github.com/ThinkerQAQ/syndirelay) reads the same content repository.
-
-The [live deployment repository](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) demonstrates separate content, Workers and GitHub Pages/EdgeOne deployment. Start with the content template for a single-repository setup.
+To publish on other platforms, follow the [SyndiRelay README](https://github.com/ThinkerQAQ/syndirelay) and point it at the same blog content repository.
 
 ## 5. Development
 
-From the engine directory:
+Install the Node.js and diagram prerequisites from [CI](.github/workflows/ci.yml), then run in a new development directory:
 
 ```bash
+git clone https://github.com/ThinkerQAQ/inkerio.git
+cd inkerio
 npm ci
 npm run assemble:template
 npm run test:engine
@@ -177,7 +197,7 @@ npm run check
 npm run build:template
 ```
 
-`build:template` builds the public examples for engine verification. Production deployment uses the publication check in your blog repository.
+`assemble:template` clones the public template if missing. Keep this checkout separate from your own blog preview.
 
 The template workflow pins an engine commit. To upgrade an existing blog, update its engine `ref` in `.github/workflows/deploy.yml` to a validated commit and check the resulting build.
 
