@@ -2,26 +2,18 @@
 
 ## Ownership
 
-- `ThinkerQAQ/inkerio` — Astro engine, content schema, assembly, static build, local search, RSS, Sitemap.
-- `ThinkerQAQ/inkerio-content-template` — public fictional content fixtures and media.
-- `ThinkerQAQ/blog-content` — real content and photography, private.
-- `ThinkerQAQ/ThinkerQAQ.github.io` — production site configuration, domain verification, CI/CD and credentials.
-- BlogCTL — independent cross-platform publishing product, temporarily remains in the original monorepo.
+- `ThinkerQAQ/inkerio` — reusable Astro engine, schemas, content assembly, static builds, Pagefind, RSS and sitemap.
+- `ThinkerQAQ/inkerio-content-template` — public fictional content and media fixtures.
+- Content repository — owner-specific articles, photos, About text, translations and content copyright policy; may be private.
+- `ThinkerQAQ/ThinkerQAQ.github.io` — example production wrapper: personal site config, verification files, GitHub Pages/EdgeOne CI and Workers.
+- SyndiRelay (independent private repository) — optional off-site publishing and CI search integration. Inkerio does not import it.
 
-## Build inputs and outputs
+## Inputs and outputs
 
-The build accepts **engine version**, **content version** (`src/content/`, optional `public/media/` and `src/data/content-manifest.json`) and **site.config.json** (domain, author, optional integrations). It generates `dist/`: static HTML, RSS, Sitemap, assets and Pagefind search. Generated content is untracked and copied from a read-only content source.
+The engine consumes a **pinned engine version**, a separately managed **content version**, and `site.config.json` (domain, site title, author, multilingual descriptions and optional integrations). The assembly process writes ignored `src/content/`, optional `public/media/` and manifest; a static build writes `dist/` with HTML, RSS, sitemap, assets and Pagefind.
 
-## Migration stages
+## Deployment / 部署
 
-1. **Extract without cutover.** Independently build Inkerio using public template content; do not fetch private data in public CI.
-2. **Move identity to deployment config.** Own website assets, domains, registration, analytics and cloud configuration in `ThinkerQAQ.github.io`. Pin an engine version.
-3. **Compare output using a fixed private content SHA.** In an authorized private workflow compare old vs new route inventory, canonical/hreflang, feeds, media paths and representative article rendering. Fail on unexplained differences.
-4. **Switch production with rollback.** The wrapper checks out Inkerio and private content, overlays site settings, builds and deploys. Retain the previous commit/workflow until smoke tests pass.
-5. **Extract BlogCTL separately.** Relocate its CLI, MCP, extensions and publishing compiler; eliminate hardcoded Astro/Node renderer paths. Do not combine this with production cutover.
+The migration has completed: the production ThinkerQAQ wrapper pins Inkerio and uses distinct read-only credentials for private content and optional private SyndiRelay search tasks. Website identity and private credentials belong to the wrapper, **not to the engine**. Public engine CI uses only the demonstration template and never checks out private owner content.
 
-The current extraction is not the active production deployment. Future changes to content schema must be tested against the content template and documented with compatibility requirements.
-
-## 中文结论
-
-先独立构建公开演示站点，再对照私人文章的构建结果，最后切换生产部署。旧站点暂时不动；BlogCTL 与 Inkerio 解耦后再单独迁移仓库，避免三套工作同时修改。
+升级引擎时，先使用公开模板完成 CI，再以固定的私人内容 SHA 验证路由、canonical/hreflang、RSS、sitemap、摄影与搜索；最后由站点仓库更新引擎提交并部署。不得把个人域名、密钥或文章复制回通用引擎。

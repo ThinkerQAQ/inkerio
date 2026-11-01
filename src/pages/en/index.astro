@@ -1,12 +1,12 @@
 ---
 import HomeKnowledgeHub from "../../components/HomeKnowledgeHub.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { SITE } from "../../config/site";
 import { siteWebsiteSchema } from "../../lib/structured-data";
 
 const locale = "en" as const;
 const websiteSchema = siteWebsiteSchema();
-const description =
-  "ThinkerQAQ's technical knowledge garden for backend engineering, concurrency, distributed systems, data systems, and software engineering.";
+const description = SITE.descriptionEn;
 ---
 
 <BaseLayout

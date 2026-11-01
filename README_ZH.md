@@ -4,7 +4,7 @@
 
 **Inkerio 是基于 Astro 的中英文静态博客引擎**，支持文章、笔记、思维导图、项目、系列、摄影、RSS、Sitemap、增量索引清单和全文搜索。内容由独立仓库提供，不与引擎源码混存。
 
-**状态：独立引擎迁移验证阶段。** [ThinkerQAQ 个人网站](https://thinkerqaq.com/) 仍使用原部署工作流，本仓库暂不触及生产部署。
+**状态：独立引擎已投入生产。** [ThinkerQAQ 网站](https://thinkerqaq.com/)通过专门的部署仓库固定 Inkerio 版本；本引擎仓库不持有网站凭据或个人内容。
 
 ## 快速启动
 
@@ -34,8 +34,8 @@ npm run build
 - **Inkerio**：通用页面、内容 Schema、Markdown/图表渲染、静态构建和搜索。
 - **inkerio-content-template**：公开虚构样例，不与个人网站集成仓库合并。
 - **blog-content**：你的真实文章、摄影及版权政策，保持独立 Private。
-- **BlogCTL**：跨平台内容分发、CLI、Bridge、浏览器扩展及 MCP，暂时留在[原仓库](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl)。
-- **ThinkerQAQ.github.io**：未来只负责个人配置、域名验证文件和 CI/CD。
+- **SyndiRelay（独立私有仓库）**：可选的跨平台分发、CLI、Bridge、浏览器扩展与 MCP；引擎本身不依赖它。
+- **ThinkerQAQ.github.io**：已经缩减为个人网站身份配置、域名验证文件、专属 Worker 与 CI/CD 部署。
 
 [site.config.json](site.config.json) 使用通用演示身份。部署时由专用站点仓库覆盖，不向公共引擎提交凭据、备案、Cookie 或真实内容。
 

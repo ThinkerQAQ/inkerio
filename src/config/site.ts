@@ -7,6 +7,7 @@ export const SITE = {
   homeTitle: config.homeTitle,
   homeTitleEn: config.homeTitleEn,
   description: config.description,
+  descriptionEn: config.descriptionEn || config.description,
   author: config.author,
   icpRecord: config.icpRecord,
   icpLookupUrl: config.icpLookupUrl,

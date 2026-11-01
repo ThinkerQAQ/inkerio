@@ -91,7 +91,7 @@ updatedAt: "2026-10-27T00:00:00Z"
 在 Inkerio 引擎目录执行：
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 npx --no-install astro dev --port 4321
 ```

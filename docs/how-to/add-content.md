@@ -8,7 +8,7 @@ Edit the content repository, then reassemble it into the engine. The [first-site
 4. From the engine root:
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 npx --no-install astro dev --port 4321
 ```
@@ -19,7 +19,7 @@ For a new draft, omit `status` or use `draft`. To preview article drafts in Bash
 
 When updating a published article, retain its ID and `publishedAt`; set `updatedAt` for a substantive revision. Formatting changes do not require changing dates. Commit source Markdown and media to the content repository. Run `npm run build` after assembly when checking final rendering and references.
 
-Publishing the website and updating copies on external platforms are separate operations: follow [deployment](deploy.md) and [BlogCTL publishing](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/tutorial/first-publish.md) as needed.
+Publishing the website and updating copies on external platforms are separate operations: follow [deployment](deploy.md) and SyndiRelay as needed.
 
 ## Notes on the home page
 

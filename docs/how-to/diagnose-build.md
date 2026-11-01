@@ -49,7 +49,7 @@ This preserves your current assembled content. `npm run dev:quick` assembles the
 | `npm run check` | Astro/TypeScript and collection diagnostics |
 | `npm run build` | Site rendering, diagrams, generated URL inventory and Pagefind |
 | `npm run test:docs` | Local Markdown link targets |
-| `go run ./tools/blogctl/cmd/maint verify` | BlogCTL Go tests, npm installation, docs, extension syntax and public boundaries |
+| `npm run test:engine` | Content assembly, source safety, reading components and public engine boundaries |
 | `npm test` | Broader engine tests, template assembly, check and full build |
 
 `npm test` selects the public template. To verify personal content, assemble it explicitly, then run `check` and `build`. For deployment-specific errors see [Pages troubleshooting](deploy.md#failures).

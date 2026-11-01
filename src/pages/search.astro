@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { articleIsIncluded } from "../lib/content";
+import { SITE } from "../config/site";
 const counts = await Promise.all([
   getCollection("notes"),
   getCollection("articles").then((articles) => articles.filter(articleIsIncluded)),
@@ -11,7 +12,7 @@ const counts = await Promise.all([
 const hasContent = counts.some((entries) => entries.length > 0);
 ---
 
-<BaseLayout title="搜索" description="搜索 ThinkerQAQ 的技术文章与学习笔记。" noindex={true}>
+<BaseLayout title="搜索" description={`搜索 ${SITE.title} 的文章与笔记。`} noindex={true}>
   <div class="shell page search-page" data-search-page>
     <h1 class="visually-hidden">搜索</h1>
     {hasContent ? <>
@@ -19,7 +20,7 @@ const hasContent = counts.some((entries) => entries.length > 0);
       <link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
       <script is:inline src="/pagefind/pagefind-component-ui.js" type="module"></script>
       <pagefind-config base-url="/" preload excerpt-length="40"></pagefind-config>
-      <div class="search-page__brand" hidden aria-hidden="true"><span>ThinkerQAQ</span></div>
+      <div class="search-page__brand" hidden aria-hidden="true"><span>{SITE.title}</span></div>
       <pagefind-input class="search-page__input" placeholder="搜索本站内容"></pagefind-input>
       <div class="search-page__results">
         <pagefind-summary></pagefind-summary>

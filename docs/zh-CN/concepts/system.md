@@ -1,44 +1,36 @@
-# 内容如何变成网站
+# 内容如何生成网站
 
-Inkerio 把独立版本管理的内容仓库转换为双语静态网站。BlogCTL 装配构建输入，同时提供向外部平台分发文章的独立流程。
+Inkerio 将独立内容仓库构建为中英文静态网站，**装配由引擎自带 Node.js 脚本完成**，不依赖 Go、内容分发工具或第三方账号。
 
 ## 数据流
 
 ```mermaid
 flowchart TD
-  C["内容仓库"] --> A["BlogCTL 装配"]
-  A --> I["引擎中的内容与媒体"]
-  I --> B["Astro 构建与 Pagefind"]
-  B --> D["静态托管"]
-  C --> P["BlogCTL 文章编译"]
-  P --> R["外部发布平台"]
+  C["内容仓库"] --> A["Inkerio 内容装配"]
+  S["站点配置"] --> B["Astro 静态构建及 Pagefind"]
+  A --> B
+  B --> D["独立部署仓库及静态托管"]
+  C -.-> P["可选的独立 SyndiRelay"]
+  P -.-> R["站外发布平台"]
 ```
 
-公开的 [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) 提供示例。搭建自己的站点时，可以由它创建内容仓库。引擎仓库保留现有名称 `ThinkerQAQ.github.io`。
+公开 [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) 只提供演示内容。个人网站应建立自己的内容仓库，按[教程](../tutorial/first-site.md)装配。
 
-## 各部分管理什么
+## 职责边界
 
-| 部分 | 管理内容 |
+| 组成部分 | 责任 |
 | --- | --- |
-| 内容仓库 | Markdown、翻译、原始媒体、健身记录及可选内容清单 |
-| 引擎 `src/`、`astro.config.mjs` | 路由、布局、元数据、SEO、RSS 和内容 Schema |
-| `tools/blogctl/` | 装配、文章编译、资源处理、分发、索引及浏览器 Bridge |
-| `scripts/`、`src/markdown/` | 图表渲染及站点构建辅助 |
-| `.github/workflows/` | 构建、发布与部署编排 |
-| `workers/` | 单独配置的统计、报表、点赞与可选 AI 检索 |
+| 内容仓库 | 文章、笔记、翻译、摄影、About、版权策略、可选内容清单 |
+| 引擎 `src/` 与 `astro.config.mjs` | 路由、组件、SEO、RSS、Schema 与静态构建 |
+| 引擎 `scripts/` | 内容装配、图表预渲染、索引构建 |
+| 引擎 `.github/workflows/` | 仅使用公开样例的 CI 验证 |
+| 站点部署仓库 | 站点名称、域名、验证资源、私有内容权限、Worker 与托管部署 |
+| SyndiRelay（独立私有项目） | 可选的站外分发、Bridge、MCP、浏览器扩展及搜索提交工具 |
 
-装配会替换引擎生成的 `src/content/`。源媒体目录存在时，还会替换对应的引擎媒体目录。它不修改原始内容仓库；写作应在那里编辑和提交，之后可以反复装配或升级引擎。
+在引擎根目录运行 `node scripts/assemble-content.mjs --content-root ../blog-content`，将源内容复制到 Git 忽略的生成目录；原始内容仍在自己的仓库中维护。`npm run build` 生成 `dist/`，包含 Pagefind 索引；部署后无需常驻 Astro 或 Go 服务。
 
-[站点教程](../tutorial/first-site.md)通过两个本地仓库演示这个流程。产物位于 `dist/`，包含 Pagefind 索引。托管服务只需提供静态文件，无需运行 Go 或 Astro 服务。
+## 搜索与部署
 
-## 搜索与分发
+Pagefind 是静态网站自身的搜索能力；AI Search、Umami、评论、Worker 与站外分发均需独立配置。构建网站不会向第三方平台发布文章。
 
-Pagefind 在浏览器中搜索已构建的网站。可选 AI Search 把符合条件的公开内容上传至 Cloudflare，提供独立检索；关闭问博客不会关闭 Pagefind。
-
-站点构建不会向第三方账号发布文章。BlogCTL 按平台编译选定原文，再按明确的创建或更新目标执行。扩展访问浏览器登录会话，本地 Bridge 执行任务并记录结果。详见 [BlogCTL 工作流](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/zh-CN/guide/workflows.md)。
-
-## 部署配置
-
-当前工作流包含作者的 Pages、EdgeOne 部署、仓库身份限制及可选云服务。Fork 需要设置自己的身份、内容访问权限与托管资源，见[个性化配置](../how-to/customize-site.md)和[部署指南](../how-to/deploy.md)。
-
-评论与浏览器服务见[站点集成](search-and-integrations.md)，扩展取舍见[架构原则](../architecture/principles.md)。
+生产部署由站点专用仓库固定引擎与内容版本、覆盖 `site.config.json`，再将静态产物发布到所选平台。可参考[部署说明](../how-to/deploy.md)与[集成文档](search-and-integrations.md)。

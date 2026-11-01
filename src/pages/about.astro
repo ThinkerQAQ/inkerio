@@ -3,6 +3,7 @@ import { getEntry } from "astro:content";
 import AboutContent from "../components/AboutContent.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { profilePageSchema } from "../lib/structured-data";
+import { SITE } from "../config/site";
 
 const entry = await getEntry("pages", "about");
 if (!entry || entry.data.language !== "zh") {
@@ -10,7 +11,7 @@ if (!entry || entry.data.language !== "zh") {
 }
 const profileSchema = profilePageSchema({
   path: "/about/",
-  name: "关于 ThinkerQAQ",
+  name: `关于 ${SITE.author}`,
   description: entry.data.seoDescription,
   inLanguage: "zh-CN",
 });

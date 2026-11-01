@@ -77,7 +77,7 @@ function cliInvocation() {
 async function runMermaidCLI(item) {
   if (!existsSync(CLI)) throw new Error("Mermaid CLI not installed. Run npm ci in the public engine first.");
   const invocation = cliInvocation();
-  const temporary = await mkdtemp(path.join(os.tmpdir(), "thinkerqaq-mermaid-"));
+  const temporary = await mkdtemp(path.join(os.tmpdir(), "inkerio-mermaid-"));
   try {
     const source = path.join(temporary, "diagram.mmd");
     const output = path.join(temporary, "diagram.svg");

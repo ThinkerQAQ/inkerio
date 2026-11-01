@@ -2,7 +2,7 @@
 
 [简体中文](zh-CN/index.md)
 
-Inkerio builds an Astro site from Markdown kept in a separate repository. [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) provides public examples; BlogCTL assembles content and distributes articles to external platforms. The author's ThinkerQAQ site is one deployment of the engine.
+Inkerio builds an Astro site from content in a separate repository. [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) provides public examples; the engine assembles content with Node.js. SyndiRelay is an independent, optional publishing product. The ThinkerQAQ website is one deployment of Inkerio.
 
 | What you're doing | Read |
 | --- | --- |
@@ -16,9 +16,9 @@ Inkerio builds an Astro site from Markdown kept in a separate repository. [inker
 | Checking exact commands and settings | [Reference](reference/index.md) |
 | Reviewing public template examples | [Examples](examples/index.md) |
 | Extending the system | [Architecture principles](architecture/principles.md) |
-| Using the publishing application | [BlogCTL documentation](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/index.md) |
+| Understanding optional external syndication | [System boundaries](architecture/repository-boundaries.md) |
 
-Commands are documented under [Reference](reference/commands.md). The Go and TypeScript definitions linked there are the final source for configuration and interfaces.
+Commands are documented under [Reference](reference/commands.md). The TypeScript and JavaScript definitions linked there are the final source for configuration and interfaces.
 
 ## Documentation structure
 
@@ -32,4 +32,4 @@ Commands are documented under [Reference](reference/commands.md). The Go and Typ
 | Examples | Runnable sample content and configurations |
 | Architecture | Design principles, constraints and extension decisions |
 
-Keep site documentation here and publishing-tool documentation under `tools/blogctl/docs/`. Link between them instead of copying instructions. English pages live directly under `docs/`; Chinese counterparts use the same paths under `docs/zh-CN/`.
+Keep engine documentation here and SyndiRelay documentation in its own repository. Link between them instead of copying instructions. English pages live directly under `docs/`; Chinese counterparts use the same paths under `docs/zh-CN/`.

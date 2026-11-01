@@ -11,11 +11,12 @@
   "authorProfilePath": "/about/",
   "alternateNames": [],
   "url": "https://example.com",
-  "github": "https://github.com/ThinkerQAQ/inkerio",
+  "github": "https://github.com/example",
   "profiles": [],
-  "repository": "https://github.com/ThinkerQAQ/inkerio",
+  "repository": "https://github.com/example/example.github.io",
   "contactEmail": "",
   "locale": "zh-CN",
   "commentsRepository": "",
-  "publicSecurityIcon": ""
+  "publicSecurityIcon": "",
+  "descriptionEn": "A bilingual static blog powered by Inkerio."
 }

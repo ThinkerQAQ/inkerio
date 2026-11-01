@@ -4,6 +4,7 @@ import AboutContent from "../../components/AboutContent.astro";
 import { LOCALES, localizePath, nonDefaultLocales, type Locale } from "../../config/i18n";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { profilePageSchema } from "../../lib/structured-data";
+import { SITE } from "../../config/site";
 
 export function getStaticPaths() {
   return nonDefaultLocales().map((locale) => ({
@@ -22,7 +23,7 @@ const localeInfo = LOCALES[locale];
 const aboutPath = localizePath(locale, "/about/");
 const profileSchema = profilePageSchema({
   path: aboutPath,
-  name: `About ThinkerQAQ`,
+  name: `About ${SITE.author}`,
   description: entry.data.seoDescription,
   inLanguage: localeInfo.htmlLang,
 });

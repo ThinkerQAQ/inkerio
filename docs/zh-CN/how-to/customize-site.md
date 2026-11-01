@@ -9,7 +9,7 @@ Inkerio 自带的 [site.config.json](../../../site.config.json) 只包含**虚�
 | 字段 | 用途 |
 | --- | --- |
 | `title`、`homeTitle`、`homeTitleEn` | 网站名称及双语首页标题 |
-| `description`、`author`、`authorProfilePath` | SEO 和作者信息 |
+| `description`、`descriptionEn`、`author`、`authorProfilePath` | SEO 和作者信息 |
 | `url` | HTTPS 站点源地址，统一用于 Astro 和结构化数据 |
 | `github`、`profiles`、`repository` | 公开社交与代码仓库链接 |
 | `contactEmail` | 联系邮箱，可留空 |
@@ -29,7 +29,7 @@ Inkerio 自带的 [site.config.json](../../../site.config.json) 只包含**虚�
 - 点赞：`PUBLIC_REACTION_WORKER_URL` 指向自己的 Worker。
 - AI：作为可选外部服务，通用引擎不负责部署。
 
-BlogCTL 是[独立的内容分发工具](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl)，其 Canonical 与外部平台配置要另行检查，不能假定与网站的 `site.config.json` 自动同步。
+SyndiRelay 是独立的内容分发工具，其 Canonical 与外部平台配置应单独确认，不能假定与网站的 `site.config.json` 自动同步。
 
 ## 验证
 

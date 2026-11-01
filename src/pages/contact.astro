@@ -2,11 +2,13 @@
 import CollectionHeader from "../components/CollectionHeader.astro";
 import { SITE } from "../config/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
+const githubURL = new URL(SITE.github);
+const githubLabel = githubURL.host + githubURL.pathname.replace(/\/$/, "");
 ---
 
 <BaseLayout
   title="联系"
-  description="通过邮箱联系 ThinkerQAQ：技术讨论、文章反馈或合作事宜。"
+  description={`联系 ${SITE.author}：技术讨论、文章反馈或合作事宜。`}
   canonicalPath="/contact/"
 >
   <div class="shell page narrow collection-page">
@@ -16,13 +18,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     />
 
     <div class="prose">
-      <h2>邮箱</h2>
-      <p>
-        <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
-      </p>
+      {SITE.contactEmail && (
+        <>
+          <h2>邮箱</h2>
+          <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+        </>
+      )}
       <h2>GitHub</h2>
       <p>
-        <a href={SITE.github}>github.com/ThinkerQAQ</a>
+        <a href={SITE.github}>{githubLabel}</a>
       </p>
       <p>
         具体代码或项目问题，也可以在对应的 GitHub 仓库中讨论。

@@ -8,15 +8,14 @@ This starts Inkerio on your computer using the public content template. It does 
 | --- | --- |
 | Git | Cloning the engine and template |
 | Node.js 22.12+ and npm 9.6.5+ | Astro and frontend dependencies |
-| Go 1.27.1 or a compatible newer toolchain | BlogCTL content assembly; the workspace version is in `go.work` |
 
-Check `git --version`, `node --version`, `npm --version` and `go version` in the terminal you will use. Windows users can use PowerShell or WSL; install the tools in the chosen environment.
+Check `git --version`, `node --version`, `npm --version` in the terminal you will use. Windows users can use PowerShell or WSL; install the tools in the chosen environment.
 
 ## Start Inkerio
 
 ```bash
-git clone https://github.com/ThinkerQAQ/ThinkerQAQ.github.io.git
-cd ThinkerQAQ.github.io
+git clone https://github.com/ThinkerQAQ/inkerio.git
+cd inkerio
 npm ci
 npm run dev:quick
 ```

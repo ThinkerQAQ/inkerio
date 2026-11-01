@@ -2,7 +2,7 @@
 
 [English](../index.md) · [仓库首页](../../README_ZH.md)
 
-本仓库管理 Inkerio 博客引擎。[inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) 提供公开示例，ThinkerQAQ 的个人博客是引擎的一个部署实例。文章和笔记来自独立的 `blog-content`，由 BlogCTL 装配后交给 Astro 构建。多平台分发功能在 [BlogCTL 文档](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/zh-CN/index.md)中介绍。
+本仓库管理 Inkerio 博客引擎。[inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) 提供公开示例；文章、笔记等内容可放在单独的内容仓库，由引擎内置 Node.js 脚本装配后交给 Astro 构建。ThinkerQAQ 个人网站是其中一个部署实例。多平台分发由独立的 SyndiRelay 项目负责，不是使用 Inkerio 的必要条件。
 
 | 想做什么 | 从这里开始 |
 | --- | --- |
@@ -31,4 +31,4 @@
 | Examples / 示例 | 可运行的示例内容与配置 |
 | Architecture / 架构 | 设计原则、约束与扩展决策 |
 
-站点文档放在 `docs/`，发布工具文档放在 `tools/blogctl/docs/`，通过链接关联，避免复制维护。英文文档直接位于各自文档根目录，中文对应文档位于 `zh-CN/`，保持相同的相对路径。
+引擎文档放在 `docs/`，分发工具文档由 SyndiRelay 仓库独立维护，通过链接关联，避免复制维护。英文文档直接位于各自文档根目录，中文对应文档位于 `zh-CN/`，保持相同的相对路径。

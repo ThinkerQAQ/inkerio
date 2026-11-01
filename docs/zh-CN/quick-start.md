@@ -8,15 +8,14 @@
 | --- | --- |
 | Git | 获取引擎和内容模板 |
 | Node.js 22.12+、npm 9.6.5+ | 运行 Astro 和前端工具链 |
-| Go 1.27.1 或兼容的更新工具链 | 运行 BlogCTL 内容装配；工作区版本见 `go.work` |
 
-在准备使用的终端检查 `git --version`、`node --version`、`npm --version` 和 `go version`。Windows 可以选择 PowerShell 或 WSL，依赖应安装在所选环境中。
+在准备使用的终端检查 `git --version`、`node --version`、`npm --version`。Windows 可以选择 PowerShell 或 WSL，依赖应安装在所选环境中。
 
 ## 启动 Inkerio
 
 ```bash
-git clone https://github.com/ThinkerQAQ/ThinkerQAQ.github.io.git
-cd ThinkerQAQ.github.io
+git clone https://github.com/ThinkerQAQ/inkerio.git
+cd inkerio
 npm ci
 npm run dev:quick
 ```

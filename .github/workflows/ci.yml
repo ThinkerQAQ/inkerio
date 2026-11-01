@@ -63,4 +63,4 @@ jobs:
           test -s dist/sitemap-inventory.json
           test -s dist/rss.xml
           test -s dist/pagefind/pagefind-entry.json
-          ! grep -Rq 'thinkerqaq.com' dist/index.html
+          ! grep -RiEq 'thinkerqaq\.com|About ThinkerQAQ|关于 ThinkerQAQ' dist --include='*.html'

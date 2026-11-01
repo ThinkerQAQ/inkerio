@@ -11,7 +11,7 @@ For a local trial, clone the public template directly:
 ```bash
 mkdir inkerio-workspace
 cd inkerio-workspace
-git clone https://github.com/ThinkerQAQ/ThinkerQAQ.github.io.git
+git clone https://github.com/ThinkerQAQ/inkerio.git
 git clone https://github.com/ThinkerQAQ/inkerio-content-template.git blog-content
 ```
 
@@ -22,13 +22,13 @@ For ongoing writing, replace the second clone URL with your own repository URL, 
 Use the [Quick Start requirements](../quick-start.md), then run from the engine checkout:
 
 ```bash
-cd ThinkerQAQ.github.io
+cd inkerio
 npm ci
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npx --no-install astro dev --port 4321
 ```
 
-Open [localhost:4321](http://localhost:4321). The assembly message starts with `[site] assembled content=`. Astro should list the sample content.
+Open [localhost:4321](http://localhost:4321). Successful assembly prints JSON with `"operation":"assemble-content"` and `"status":"passed"`. Astro should list the sample content.
 
 Assembly replaces the engine's `src/content/` tree. It also replaces `public/media/` when the source has that directory, and copies the content manifest when present. Edit the source checkout, because another assembly discards edits made to generated content.
 
@@ -60,7 +60,7 @@ The example uses the cover shipped with the template. For your own cover, put a 
 Keep the dev server running. In another terminal, from the engine root:
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 ```
 

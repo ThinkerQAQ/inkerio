@@ -6,13 +6,13 @@ Use this table to find the configuration and code for each website integration.
 | --- | --- | --- |
 | Site routes and SEO | [`src/pages/`](../../src/pages/), [structured data](../../src/lib/structured-data.ts), [Astro config](../../astro.config.mjs) | Engine build, canonical metadata, RSS/sitemap |
 | Pagefind full-text search | [index builder](../../scripts/build-pagefind.mjs), [search page](../../src/pages/search.astro) | Generated after Astro static build |
-| Search engine submission | [BlogCTL search](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/cmd/search.go), [deployment workflow](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/.github/workflows/deploy.yml) | IndexNow, Google Search Console, configured providers |
-| AI Search | [Worker README](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-ai/README.md), [AI Search CLI](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/cmd/ai_search.go) | `CLOUDFLARE_AI_SEARCH_*` variables and Worker release |
+| Search engine submission | SyndiRelay, [deployment workflow](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/.github/workflows/deploy.yml) | IndexNow, Google Search Console, configured providers |
+| AI Search | [Worker README](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-ai/README.md), SyndiRelay | `CLOUDFLARE_AI_SEARCH_*` variables and Worker release |
 | Umami | [BaseLayout](../../src/layouts/BaseLayout.astro), [content analytics](../../src/components/ContentAnalyticsRuntime.astro) | `PUBLIC_UMAMI_WEBSITE_ID`, `PUBLIC_UMAMI_PROXY_ORIGIN` |
 | Comments | [ContentComments](../../src/components/ContentComments.astro) | utterances integration |
 | Reactions | [ContentReaction](../../src/components/ContentReaction.astro), [Worker README](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-reactions/README.md) | `PUBLIC_REACTION_WORKER_URL`, D1/Worker setup |
 | EdgeOne static delivery | [Deployment workflow](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/.github/workflows/deploy.yml) | Makers deploys static output |
-| External article publishing | [BlogCTL product documentation](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/index.md) | Local Bridge, configured per-platform adapters |
+| External article publishing | SyndiRelay | Local Bridge, configured per-platform adapters |
 
 The Umami browser bundle is vendored at `public/u.js` (served as `/u.js`). Source: `https://cloud.umami.is/script.js` (retrieved 2026-10-11, SHA-256: `91a876d767646fd5b7701b6fabf97f8a99ae53b94e7e5b58d465bad1e5d763e0`); see `public/u.js.LICENSE.txt`. The `PUBLIC_UMAMI_PROXY_ORIGIN` setting remains the collector host for `POST /api/send`; static hosting fixes script delivery only. When refreshing the bundle, recheck the source hash and run `npm run test:umami`.
 

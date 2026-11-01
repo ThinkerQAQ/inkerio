@@ -36,10 +36,10 @@ The content repository must provide `src/content/`; it may include `public/media
 | **Inkerio** (here) | Astro pages, schema, Markdown/diagram rendering, content assembly and static-site build |
 | **inkerio-content-template** | Fictional/sample articles, photographs and policy |
 | **Your content repository** | Real writing, photos, About page and content copyright policy; can be private |
-| **[BlogCTL](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl)** | Companion publishing app: CLI, platform adapters, MCP, Bridge, browser extension; retained in the legacy repo for now |
+| **SyndiRelay** (private, independent) | Optional article syndication, CLI, MCP, Bridge and browser extension; not required by Inkerio |
 | **Deployment wrapper** | Domain, branding, `site.config.json`, verification files, CI secrets and Pages/EdgeOne deployment |
 
-The checked-in [site.config.json](site.config.json) holds **generic demonstration settings**. Site owners replace it at build time rather than editing reusable engine source. Comments and analytics are optional.
+The checked-in [site.config.json](site.config.json) holds **generic demonstration settings** including `descriptionEn` for English SEO. Site owners replace it at build time rather than editing reusable engine source. Comments and analytics are optional.
 
 ## Development
 
