@@ -1,73 +1,78 @@
 # Inkerio
 
-[English](README.md) · [公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template) · [拆分方案](docs/architecture/repository-boundaries.md) · [源码 Releases](https://github.com/ThinkerQAQ/inkerio/releases) · [MIT License](LICENSE)
+[English](README.md) · [创建自己的博客](https://github.com/ThinkerQAQ/inkerio-content-template) · [线上示例](https://thinkerqaq.com/) · [实际部署代码](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) · [MIT 许可证](LICENSE)
 
-**Inkerio 是基于 Astro 的中英文静态博客引擎**，支持文章、笔记、思维导图、项目、系列、摄影、RSS、Sitemap、增量索引清单和全文搜索。内容由独立仓库提供，不与引擎源码混存。
+**Inkerio 是一个基于 Astro 的开源双语博客引擎。** 它支持 Markdown 文章、笔记与交互式思维导图、项目、摄影、RSS、站点地图及全文搜索。引擎只负责内容装配与渲染，不与某个人的博客数据、域名或部署平台绑定。
 
-**状态：独立引擎已投入生产。** [ThinkerQAQ 网站](https://thinkerqaq.com/)通过专门的部署仓库固定 Inkerio 版本；本引擎仓库不持有网站凭据或个人内容。
+我们希望解决的是一个具体的问题：**如何让一个没有接触过 Inkerio 的程序员，从零创建并上线自己的 `username.github.io` 博客？** 现在通过[公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template)即可完成，不需要复制引擎或研究作者自己的部署仓库。
 
-## 快速启动
+## Quick Start：从零创建并上线个人博客
 
-需要 Node.js 22.12+、npm、Git，不再依赖 Go 或 BlogCTL。
+### 1. 创建博客仓库
+
+打开 [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template)，点击 **Use this template → Create a new repository**。
+
+将仓库命名为 `YOUR_USERNAME.github.io`，`YOUR_USERNAME` 替换为自己的 GitHub 用户名（小写）。使用 GitHub Free 的话，仓库需要选择 **Public**。
+
+**普通用户只需要这一个仓库。** 内容、图片、网站配置和 GitHub Pages 工作流都放在其中；Inkerio 作为外部引擎，在构建时自动检出。
+
+### 2. 修改网站配置
+
+在新仓库根目录编辑 `site.config.json`：
+
+```json
+{
+  "title": "Alice 的博客",
+  "author": "Alice",
+  "url": "https://alice.github.io",
+  "description": "我的个人博客，记录技术与生活。",
+  "descriptionEn": "My personal blog about technology and life."
+}
+```
+
+其中 `url` 与自己的网站地址保持一致，不能保留示例用户名；未修改的作者和域名占位符会导致构建失败，以免误发布。
+
+自己的文章放在 `src/content/articles/`，笔记在 `src/content/notes/`，关于页面在 `src/content/pages/`，图片在 `public/media/`。中英文版权策略统一维护在 `src/content/site/copyright.json`，不要把示例授权说明当成自己的版权声明。
+
+### 3. 自动部署 GitHub Pages
+
+进入新仓库的 **Settings → Pages → Build and deployment**，将 **Source** 选择为 **GitHub Actions**。
+
+把 `site.config.json` 的修改提交至 `main`，然后在 **Actions** 查看 **Deploy my Inkerio blog to GitHub Pages**。如未自动触发，可通过 **Run workflow** 手动执行。
+
+整个构建流程是：检出固定版本的 Inkerio → 合并个人站点配置 → 装配文章和图片 → 类型检查 → 生成静态网站 → 发布 GitHub Pages。
+
+**不需要自己申请 Token、配置浏览器 Cookie、购买云服务器，也不依赖 SyndiRelay。**
+
+### 4. 验证上线
+
+访问 **https://YOUR_USERNAME.github.io/**。检查首页、文章、图片及英文页面 `/en/`。当 GitHub Actions 的构建和部署任务都成功，才算完成了第一轮建站。
+
+需要注意，GitHub Free 的公开仓库意味着其中的草稿文件也可以被他人直接查看，敏感内容和密钥不要提交进去。
+
+### 5. 本地预览（可选）
+
+需要 Git、Node.js **22.12+** 和 npm。将自己的内容仓库与 Inkerio 克隆到同一父目录：
 
 ```bash
+mkdir inkerio-workspace && cd inkerio-workspace
 git clone https://github.com/ThinkerQAQ/inkerio.git
+git clone https://github.com/YOUR_USERNAME/YOUR_USERNAME.github.io.git my-blog
 cd inkerio
 npm ci
-npm run dev:quick
+node ../my-blog/scripts/configure-site.mjs --engine .
+node scripts/assemble-content.mjs --content-root ../my-blog
+npx --no-install astro dev --port 4321
 ```
 
-浏览器访问 http://localhost:4321。命令自动克隆公开的 [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) 生成演示内容。
+访问 http://localhost:4321 即可预览**自己的博客**。`npm run dev:quick` 是演示模板预览命令，不能用它取代自己的内容装配。需要正式本地构建时，先装配内容，再执行 `npm run check` 和 `npm run build`。
 
-完整构建：`npm run build:template`。使用自己的内容仓库：
+## 可选配置与项目关系
 
-```bash
-node scripts/assemble-content.mjs --content-root ../your-content-repo
-npm run check
-npm run build
-```
+独立域名需要同时修改 `site.config.json` 的 `url` 与 GitHub Pages 的自定义域名设置。访问量统计、点赞及评论均属于可选集成，不影响基本建站。
 
-内容库必须具有 `src/content/`；可选 `public/media/` 与 `src/data/content-manifest.json`。装配只复制到引擎忽略目录，不修改真实内容库。
+如果将来需要把文章分发到其他内容平台，可以使用 [SyndiRelay](https://github.com/ThinkerQAQ/syndirelay)，**它直接读取同一份博客内容**，不需要用户再建立一个 Blog Content 仓库。
 
-## 职责边界
+**实际案例（Live Example）：** [thinkerqaq.com](https://thinkerqaq.com/) 使用 Inkerio 构建，其 [ThinkerQAQ.github.io](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) 仓库展示了更复杂的生产环境方案，包括独立内容仓库、网站部署包装层、Worker 及 GitHub Pages/EdgeOne。这是可参考的**生产实践**，不是要求新用户直接复制的建站模板。普通用户应优先使用单仓库内容模板。
 
-- **Inkerio**：通用页面、内容 Schema、Markdown/图表渲染、静态构建和搜索。
-- **inkerio-content-template**：公开虚构样例，不与个人网站集成仓库合并。
-- **blog-content**：你的真实文章、摄影及版权政策，保持独立 Private。
-- [**SyndiRelay**](https://github.com/ThinkerQAQ/syndirelay)（独立开源仓库）：可选的跨平台分发、CLI、Bridge、浏览器扩展与 MCP；引擎本身不依赖它。
-- **ThinkerQAQ.github.io**：已经缩减为个人网站身份配置、域名验证文件、专属 Worker 与 CI/CD 部署。
-
-首页分类、笔记分类、RSS 和历史重定向详见[站点行为配置](docs/zh-CN/reference/site-features.md)。
-
-[site.config.json](site.config.json) 使用通用演示身份。部署时由专用站点仓库覆盖，不向公共引擎提交凭据、备案、Cookie 或真实内容。
-
-见[完整迁移顺序](docs/architecture/repository-boundaries.md)。原创引擎代码使用 [MIT](LICENSE)，第三方依赖及用户内容保留独立版权；参见[第三方声明](THIRD_PARTY_NOTICES.md)。
-
-## 引擎源码发布
-
-正式版本入口：[Inkerio Releases](https://github.com/ThinkerQAQ/inkerio/releases)。
-重新梳理后的独立源码版本从 `inkerio-v2.1.0` 开始。
-GitHub 提供的 ZIP/TAR 是**引擎源码**，不是开箱即用的网站安装包。
-须先安装 Node.js/npm，再装配[公开内容模板](https://github.com/ThinkerQAQ/inkerio-content-template)
-或自己的内容仓库。
-
-[SyndiRelay](https://github.com/ThinkerQAQ/syndirelay) 已独立开源，
-仅负责可选的内容分发，不是 Inkerio 构建和渲染的必需依赖。
-生产部署应固定经过测试的 **commit SHA**，而不是自动追踪最新版。
-文章、摄影与生产 Worker 分别由各自仓库维护。
-
-
-## CLI 与 MCP（无需浏览器扩展）
-
-Inkerio 提供独立的 Node.js CLI 和 MCP stdio 入口，直接复用现有 Astro、图表及内容装配脚本。它不负责向第三方内容平台发布，也不依赖 Go、BlogCTL、浏览器扩展或 Cookie。
-
-```bash
-npm ci
-npm run tools:build
-node .inkerio-tools/cli.js status
-node .inkerio-tools/cli.js validate --content-root /absolute/path/to/content
-node .inkerio-tools/cli.js build
-node .inkerio-tools/cli.js preview --port 4321
-```
-
-MCP 客户端配置 stdio 命令 `node /absolute/path/to/inkerio/.inkerio-tools/mcp.js`；`INKERIO_CONTENT_ROOT` 配置内容仓库的绝对路径。查询类工具默认只读；内容装配、构建、图表渲染和启动预览等写入操作需在**本地 MCP 进程环境**中显式设置 `INKERIO_MCP_ALLOW_MUTATIONS=1`。MCP 不暴露任意 Shell，也不包含线上发布权限。跨平台运行依赖 Node.js 和引擎自身的依赖安装。
+**版权：** Inkerio 原创引擎代码采用 [MIT](LICENSE)；用户文章、摄影、模板演示素材与第三方依赖各有不同的权利边界，详见 [第三方说明](THIRD_PARTY_NOTICES.md)。生产环境建议固定已经验证的引擎提交版本，避免不经验证地自动追踪 `main`。
