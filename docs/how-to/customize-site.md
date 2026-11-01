@@ -20,6 +20,8 @@ Both [Astro configuration](../../astro.config.mjs) and [site identity module](..
 
 Some generic labels in [localization configuration](../../src/config/i18n.ts) are still source-owned; use a fork or propose upstream localization improvements when changing structural UI copy.
 
+For homepage categories, topic labels, RSS inclusion rules and old URL redirects, see [configurable site behavior](../reference/site-features.md). These are site preferences, not engine source changes.
+
 ## Content and images
 
 - Keep your About pages, articles, notes, projects, photos and copyright policy in the separate content repository.

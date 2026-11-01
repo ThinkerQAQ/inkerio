@@ -37,6 +37,8 @@ npm run build
 - **SyndiRelay（独立私有仓库）**：可选的跨平台分发、CLI、Bridge、浏览器扩展与 MCP；引擎本身不依赖它。
 - **ThinkerQAQ.github.io**：已经缩减为个人网站身份配置、域名验证文件、专属 Worker 与 CI/CD 部署。
 
+首页分类、笔记分类、RSS 和历史重定向详见[站点行为配置](docs/zh-CN/reference/site-features.md)。
+
 [site.config.json](site.config.json) 使用通用演示身份。部署时由专用站点仓库覆盖，不向公共引擎提交凭据、备案、Cookie 或真实内容。
 
 见[完整迁移顺序](docs/architecture/repository-boundaries.md)。原创引擎代码使用 [MIT](LICENSE)，第三方依赖及用户内容保留独立版权；参见[第三方声明](THIRD_PARTY_NOTICES.md)。

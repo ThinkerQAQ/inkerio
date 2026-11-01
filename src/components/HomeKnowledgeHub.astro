@@ -20,6 +20,8 @@ import {
 } from "../lib/content";
 import { localizeNoteMetadata, noteTranslationFor } from "../lib/note-i18n";
 import { selectRecentNotes } from "../lib/recent-notes.mjs";
+import { SITE_FEATURES } from "../config/site-features";
+import { resolveKnowledgeSections } from "../lib/site-features.mjs";
 import LifeRecord from "./LifeRecord.astro";
 import { getLifeEntries } from "../lib/life";
 import ArticleList from "./ArticleList.astro";
@@ -29,28 +31,17 @@ interface Props {
   locale: Locale;
 }
 
-interface KnowledgeDefinition {
-  category: string;
-  zh: string;
-  en: string;
-}
-
 const { locale } = Astro.props;
 const latestLife = (await getLifeEntries(locale)).slice(0, 1);
 
 const copy = locale === "en"
   ? {
-      topics: "Backend Engineering · Concurrency · Distributed Systems",
-      description:
-        "Notes on backend engineering, concurrency, distributed systems, data systems, and software engineering practice.",
       startTitle: "Start Here",
       allSeries: "All Series",
       latestTitle: "Latest Articles",
       allArticles: "All Articles",
-      engineeringTitle: "Engineering Knowledge",
       recentNotesTitle: "Recent Notes",
       allNotes: "All Notes",
-      beyondTitle: "Beyond Engineering",
       projectsTitle: "Projects",
       allProjects: "All Projects",
       notesCount: (count: number) => `${count} ${count === 1 ? "note" : "notes"}`,
@@ -58,39 +49,18 @@ const copy = locale === "en"
       relatedScope: (count: number) => `${count} related note ${count === 1 ? "area" : "areas"}`,
     }
   : {
-      topics: "后端工程 · 并发编程 · 分布式系统",
-      description: "记录后端工程、并发编程、分布式系统与数据系统中的实践与思考。",
       startTitle: "从这里开始",
       allSeries: "全部系列",
       latestTitle: "最新文章",
       allArticles: "全部文章",
-      engineeringTitle: "技术知识",
       recentNotesTitle: "最近笔记",
       allNotes: "全部笔记",
-      beyondTitle: "工程之外",
       projectsTitle: "项目",
       allProjects: "全部项目",
       notesCount: (count: number) => `${count} 篇笔记`,
       articlesCount: (count: number) => `${count} 篇文章`,
       relatedScope: (count: number) => `${count} 个关联笔记主题`,
     };
-
-const engineeringDefinitions: KnowledgeDefinition[] = [
-  { category: "ai", zh: "AI", en: "AI" },
-  { category: "distributed-systems", zh: "分布式系统", en: "Distributed Systems" },
-  { category: "computer-architecture-assembly", zh: "计算机体系结构与汇编", en: "Computer Architecture & Assembly" },
-  { category: "java", zh: "Java / JVM", en: "Java / JVM" },
-  { category: "database", zh: "数据库", en: "Databases" },
-  { category: "message-queue", zh: "消息队列", en: "Message Queues" },
-  { category: "operating-system", zh: "操作系统", en: "Operating Systems" },
-];
-
-const beyondDefinitions: KnowledgeDefinition[] = [
-  { category: "photography", zh: "摄影", en: "Photography" },
-  { category: "investing", zh: "投资", en: "Investing" },
-  { category: "economics", zh: "经济学", en: "Economics" },
-  { category: "fitness", zh: "健身", en: "Fitness" },
-];
 
 const [allArticles, allSeries, allNotes, allNoteTranslations, allProjects] = await Promise.all([
   getCollection("articles"),
@@ -155,26 +125,17 @@ const publicNoteGroups = new Map(
     .map((group) => [group.category, group] as const),
 );
 
-function resolveKnowledge(definitions: KnowledgeDefinition[], minimumNotes = 1) {
-  return definitions.flatMap((definition) => {
-    const group = publicNoteGroups.get(definition.category);
-    if (!group || group.entries.length < minimumNotes) return [];
-    return [{
-      category: definition.category,
-      label: locale === "en" ? definition.en : definition.zh,
-      count: group.entries.length,
-    }];
-  });
-}
-
-const engineeringAreas = resolveKnowledge(engineeringDefinitions);
-const beyondEngineeringAreas = resolveKnowledge(beyondDefinitions);
-
+const knowledgeSections: Array<{
+  id: string;
+  title: string;
+  entries: Array<{ category: string; label: string; count: number }>;
+}> = resolveKnowledgeSections(
+  SITE_FEATURES.home.knowledgeSections,
+  [...publicNoteGroups.values()],
+  locale,
+);
 const categoryLabels = new Map(
-  [...engineeringDefinitions, ...beyondDefinitions].map((definition) => [
-    definition.category,
-    locale === "en" ? definition.en : definition.zh,
-  ]),
+  knowledgeSections.flatMap((section) => section.entries.map((entry) => [entry.category, entry.label] as const)),
 );
 // Recent notes are cross-category, not a subset of engineering knowledge.
 // English entries must have a translation; historical and non-indexable notes
@@ -209,8 +170,8 @@ const projectItems = projects.map((project) => {
 
 <div class="shell home">
   <header class="home-hero">
-    <h1>{copy.topics}</h1>
-    <p class="home-hero__description">{copy.description}</p>
+    <h1>{SITE_FEATURES.home.hero[locale].title}</h1>
+    <p class="home-hero__description">{SITE_FEATURES.home.hero[locale].description}</p>
   </header>
 
   {seriesItems.length > 0 && (
@@ -266,14 +227,14 @@ const projectItems = projects.map((project) => {
     </section>
   )}
 
-  {engineeringAreas.length > 0 && (
-    <section class="home-section" aria-labelledby="home-engineering-title">
+  {knowledgeSections.map((section) => (
+    <section class="home-section" aria-labelledby={`home-knowledge-${section.id}`}>
       <div class="section-heading">
-        <h2 id="home-engineering-title">{copy.engineeringTitle}</h2>
+        <h2 id={`home-knowledge-${section.id}`}>{section.title}</h2>
         <a href={localizePath(locale, "/notes/")}>{copy.allNotes} →</a>
       </div>
       <ul class="home-knowledge-grid">
-        {engineeringAreas.map((area) => (
+        {section.entries.map((area) => (
           <li>
             <a href={categoryHref(area.category, locale)}>
               <span>{area.label}</span>
@@ -283,26 +244,7 @@ const projectItems = projects.map((project) => {
         ))}
       </ul>
     </section>
-  )}
-
-  {beyondEngineeringAreas.length > 0 && (
-    <section class="home-section" aria-labelledby="home-beyond-title">
-      <div class="section-heading">
-        <h2 id="home-beyond-title">{copy.beyondTitle}</h2>
-        <a href={localizePath(locale, "/notes/")}>{copy.allNotes} →</a>
-      </div>
-      <ul class="home-knowledge-grid">
-        {beyondEngineeringAreas.map((area) => (
-          <li>
-            <a href={categoryHref(area.category, locale)}>
-              <span>{area.label}</span>
-              <small>{copy.notesCount(area.count)}</small>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
+  ))}
 
   {latestLife.length > 0 && (
     <section class="home-section" aria-labelledby="home-life-title">

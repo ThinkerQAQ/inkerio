@@ -27,7 +27,7 @@ The homepage places **Projects → Recent Notes → Engineering Knowledge → Be
 
 - Recent Notes selects up to **3** indexable notes with `status: active` from **any category**, ordered by `updatedAt` descending. No more than **2 notes per category** appear at once. A tied date prefers `featured: true`, then the note's `order` and ID for stable results.
 - Imported notes with `status: historical` remain accessible through the category indexes, but are not promoted into the recent list simply to fill empty slots.
-- Only categories configured in the engine's `src/components/HomeKnowledgeHub.astro` appear in the two curated category sections. Add a category to the appropriate list to expose an archive entry; this does **not** affect Recent Notes eligibility.
+- Home knowledge sections and category order come from the deployment configuration `home.knowledgeSections`; absent that config, the engine automatically derives categories. See [site behavior options](../reference/site-features.md). This does **not** affect Recent Notes eligibility.
 - The English homepage only links to notes with a matching English `noteTranslations` entry; the displayed title, description and update date are localized from that translation.
 
 See the [note schema](../reference/content-schema.md) and the [interactive mind-map guide](mindmap-notes.md).

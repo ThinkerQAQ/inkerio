@@ -1,0 +1,18 @@
+---
+import { getCollection } from "astro:content";
+import LegacyRedirect from "../components/LegacyRedirect.astro";
+import { NOTE_PAGE_SIZE } from "../config/site";
+import { SITE_FEATURES } from "../config/site-features";
+import { noteHref } from "../lib/content";
+import { expandLegacyRoutes } from "../lib/legacy-routes.mjs";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notes");
+  return expandLegacyRoutes(SITE_FEATURES.legacyRedirects, notes, NOTE_PAGE_SIZE, noteHref)
+    .map(({ from, to }) => ({ params: { legacy: from.slice(1, -1) }, props: { target: to } }));
+}
+
+interface Props { target: string }
+const { target } = Astro.props;
+---
+<LegacyRedirect target={target} />
