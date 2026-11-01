@@ -12,6 +12,8 @@ import {
   type LocaleAlternative,
 } from "../config/i18n";
 import { SITE } from "../config/site";
+import { SITE_FEATURES } from "../config/site-features";
+import { resolveAnalyticsIntegration } from "../lib/site-integrations.mjs";
 import "../styles/global.css";
 
 interface Props {
@@ -103,17 +105,11 @@ const defaultAlternative = languageAlternatives.find(
 const askBlogEnabled = import.meta.env.PUBLIC_ASK_BLOG_ENABLED === "true"
   && Boolean(import.meta.env.PUBLIC_ASK_BLOG_WORKER_URL?.trim())
   && Boolean(import.meta.env.PUBLIC_ASK_BLOG_TURNSTILE_SITE_KEY?.trim());
-const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
+const analyticsIntegration = resolveAnalyticsIntegration(SITE_FEATURES.integrations.analytics, {
+  PUBLIC_UMAMI_WEBSITE_ID: import.meta.env.PUBLIC_UMAMI_WEBSITE_ID,
+  PUBLIC_UMAMI_PROXY_ORIGIN: import.meta.env.PUBLIC_UMAMI_PROXY_ORIGIN,
+});
 const umamiDomain = new URL(SITE.url).hostname;
-const umamiProxyUrl = import.meta.env.PUBLIC_UMAMI_PROXY_ORIGIN?.trim();
-let umamiProxyOrigin = "";
-if (umamiProxyUrl) {
-  try {
-    umamiProxyOrigin = new URL(umamiProxyUrl).origin;
-  } catch {
-    umamiProxyOrigin = "";
-  }
-}
 ---
 
 <!doctype html>
@@ -149,17 +145,20 @@ if (umamiProxyUrl) {
     <meta name="twitter:card" content={socialImage ? "summary_large_image" : "summary"} />
     {socialImage && <meta name="twitter:image" content={socialImage} />}
     {socialImage && imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
-    {analytics && umamiWebsiteId && umamiProxyOrigin && (
+    {analytics && analyticsIntegration?.provider === "umami" && (
       <script
         is:inline
         defer
-        src="/u.js"
-        data-website-id={umamiWebsiteId}
+        src={analyticsIntegration.src}
+        data-website-id={analyticsIntegration.websiteId}
         data-domains={umamiDomain}
-        data-host-url={umamiProxyOrigin}
+        data-host-url={analyticsIntegration.collectorOrigin}
         data-exclude-hash="true"
         data-performance="true"
       ></script>
+    )}
+    {analytics && analyticsIntegration?.provider === "script" && (
+      <script is:inline defer src={analyticsIntegration.src} {...analyticsIntegration.attributes}></script>
     )}
     <slot name="head" />
   </head>

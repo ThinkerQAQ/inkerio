@@ -15,9 +15,10 @@ test("public Ask Blog requires explicit opt-in and the two public settings", asy
 test("analytics and reactions remain independent optional site integrations", async () => {
   const layout = await read("../layouts/BaseLayout.astro");
   const reactions = await read("./ContentReaction.astro");
-  assert.match(layout, /analytics && umamiWebsiteId && umamiProxyOrigin/);
-  assert.match(layout, /src="\/u\.js"/);
-  assert.match(reactions, /const enabled = Boolean\(endpoint\)/);
+  assert.match(layout, /resolveAnalyticsIntegration\(SITE_FEATURES\.integrations\.analytics/);
+  assert.match(layout, /analytics && analyticsIntegration\?\.provider === "umami"/);
+  assert.match(layout, /analytics && analyticsIntegration\?\.provider === "script"/);
+  assert.match(reactions, /const enabled = Boolean\(reactionIntegration\)/);
   assert.match(reactions, /\{enabled && \(/);
 });
 
