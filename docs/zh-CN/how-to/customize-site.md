@@ -18,6 +18,8 @@ Inkerio 自带的 [site.config.json](../../../site.config.json) 只包含**虚�
 
 [Astro 配置](../../../astro.config.mjs)及[站点模块](../../../src/config/site.ts)都读取该 JSON，常规身份配置不再要求编辑引擎内部 TS 代码。通用 UI 文案仍位于[国际化配置](../../../src/config/i18n.ts)，需要结构性文案修改时再考虑上游改进。
 
+首页分类、笔记分类顺序、英文标签、RSS 和历史链接的配置方式见[站点行为配置](../reference/site-features.md)。这些属于部署配置，不应直接修改通用引擎源码。
+
 ## 内容与图片
 
 真实文章、笔记、About、项目、摄影和版权政策属于独立内容库。用 `node scripts/assemble-content.mjs --content-root ../your-content` 装配内容，版权政策以内容仓库的 `src/content/site/copyright.json` 为准。个人头像、Logo、站长验证文件由部署仓库注入；引擎自带图标只是演示。

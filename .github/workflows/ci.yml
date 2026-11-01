@@ -64,3 +64,6 @@ jobs:
           test -s dist/rss.xml
           test -s dist/pagefind/pagefind-entry.json
           ! grep -RiEq 'thinkerqaq\.com|About ThinkerQAQ|关于 ThinkerQAQ' dist --include='*.html'
+          test ! -e dist/notes/category/java-juc/index.html
+          test ! -e dist/notes/category/mysql-database/index.html
+          test ! -e dist/notes/java-juc/index.html

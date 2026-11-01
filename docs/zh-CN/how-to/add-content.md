@@ -27,7 +27,7 @@ npx --no-install astro dev --port 4321
 
 - 最近笔记最多展示 **3 篇**，按 `updatedAt` 倒序排列，只选所有分类中 `status: active` 且 `indexable: true` 的笔记；**同一分类最多 2 篇**。更新时间相同时优先 `featured: true`，其次使用 `order` 与 ID 保证顺序稳定。
 - `status: historical` 的旧笔记保留在分类集合中，不会为了凑满 3 篇而混入最近笔记。
-- 「技术知识」与「工程之外」仅展示 `src/components/HomeKnowledgeHub.astro` 中各自配置的分类入口；增加分类入口不影响最近笔记的筛选资格。
+- 首页的分类栏目由 `site.config.json` 中的 `home.knowledgeSections` 决定；未配置时自动读取笔记分类。修改分类展示不会改变「最近笔记」筛选资格，详见[站点行为配置](../reference/site-features.md)。
 - 英文首页只展示存在对应英文 `noteTranslations` 的笔记，标题、简介和更新时间取自英文译文，不混入中文正文。
 
 字段说明参见[笔记内容规范](../reference/content-schema.md)，导图笔记参见[思维导图教程](mindmap-notes.md)。

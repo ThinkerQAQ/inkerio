@@ -39,6 +39,8 @@ The content repository must provide `src/content/`; it may include `public/media
 | **SyndiRelay** (private, independent) | Optional article syndication, CLI, MCP, Bridge and browser extension; not required by Inkerio |
 | **Deployment wrapper** | Domain, branding, `site.config.json`, verification files, CI secrets and Pages/EdgeOne deployment |
 
+See [site behavior options](docs/reference/site-features.md) for homepage categories, note taxonomy, RSS, and legacy redirects.
+
 The checked-in [site.config.json](site.config.json) holds **generic demonstration settings** including `descriptionEn` for English SEO. Site owners replace it at build time rather than editing reusable engine source. Comments and analytics are optional.
 
 ## Development

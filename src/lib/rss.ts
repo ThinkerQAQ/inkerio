@@ -1,5 +1,7 @@
 import { getCollection } from "astro:content";
 import type { Locale } from "../config/i18n";
+import { SITE_FEATURES } from "../config/site-features";
+import { zonedStartOfNextMonth } from "./rss-time.mjs";
 import { articleHref } from "./content";
 import { getLifeEntries, lifeHref, lifeTitle } from "./life";
 import { getWorkoutSummaries, workoutMonthHref, workoutMonthName } from "./workouts";
@@ -13,12 +15,8 @@ interface FeedEntry {
   content?: string;
 }
 
-// A fixed start prevents old workout exports from entering the feed as new posts.
-const FIRST_WORKOUT_MONTH = "2026-09";
-// There are only two published photo records from 2026 at launch. Preserve both
-// at their original dates instead of making the photography feed initially empty.
-const FIRST_PHOTO_DATE = new Date("2026-01-01T00:00:00+08:00");
-const MAX_FEED_ITEMS = 100;
+const RSS = SITE_FEATURES.rss;
+const photoSince = RSS.photoSince ? new Date(RSS.photoSince) : null;
 
 function escapeHtml(value: string): string {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
@@ -27,10 +25,7 @@ function escapeHtml(value: string): string {
 }
 
 function workoutPublishedAt(month: string): Date {
-  const [year, value] = month.split("-").map(Number);
-  // 00:00 Asia/Shanghai on the first day of the following month (16:00 UTC
-  // on the last day of the recorded month); independent of the CI timezone.
-  return new Date(Date.UTC(year, value, 0, 16));
+  return zonedStartOfNextMonth(month, RSS.timezone);
 }
 
 function workoutDescription(
@@ -58,7 +53,7 @@ export async function getFeedItems(locale: Locale, now = new Date()): Promise<Fe
   ]);
 
   const currentMonth = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Shanghai", year: "numeric", month: "2-digit",
+    timeZone: RSS.timezone, year: "numeric", month: "2-digit",
   }).format(now);
 
   const articleItems: FeedEntry[] = articles.map((entry) => ({
@@ -69,8 +64,8 @@ export async function getFeedItems(locale: Locale, now = new Date()): Promise<Fe
     categories: entry.data.tags,
   }));
 
-  const photoItems: FeedEntry[] = photos
-    .filter((entry) => entry.data.publishedAt >= FIRST_PHOTO_DATE)
+  const photoItems: FeedEntry[] = RSS.includePhotography ? photos
+    .filter((entry) => !photoSince || entry.data.publishedAt >= photoSince)
     .map((entry) => {
       const description = entry.data.description ?? lifeTitle(entry);
       const cover = entry.data.images[0];
@@ -84,12 +79,12 @@ export async function getFeedItems(locale: Locale, now = new Date()): Promise<Fe
           (cover ? '<p><img src="' + escapeHtml(cover.thumbnail ?? cover.src) +
             '" alt="' + escapeHtml(cover.alt) + '" /></p>' : ""),
       };
-    });
+    }) : [];
 
-  const workoutItems: FeedEntry[] = workouts
-    .filter((entry) => entry.data.month >= FIRST_WORKOUT_MONTH &&
+  const workoutItems: FeedEntry[] = RSS.includeWorkouts ? workouts
+    .filter((entry) => (!RSS.workoutSince || entry.data.month >= RSS.workoutSince) &&
       entry.data.month < currentMonth &&
-      entry.data.trainingDays > 0 && !entry.data.demo)
+      entry.data.trainingDays >= RSS.minTrainingDays && (RSS.includeDemoWorkouts || !entry.data.demo))
     .map((entry) => ({
       title: workoutMonthName(entry.data.month, locale) +
         (locale === "zh" ? " · 健身记录" : " · Fitness log"),
@@ -97,7 +92,7 @@ export async function getFeedItems(locale: Locale, now = new Date()): Promise<Fe
       pubDate: workoutPublishedAt(entry.data.month),
       link: workoutMonthHref(locale, entry.data.month),
       categories: [locale === "zh" ? "健身" : "Fitness"],
-    }));
+    })) : [];
 
   // Every item has a stable canonical URL. Rebuilding or re-syncing a month
   // cannot create a different RSS identity or move older records to the top.
@@ -108,5 +103,5 @@ export async function getFeedItems(locale: Locale, now = new Date()): Promise<Fe
   return [...unique.values()]
     .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime() ||
       a.link.localeCompare(b.link))
-    .slice(0, MAX_FEED_ITEMS);
+    .slice(0, RSS.maxItems);
 }

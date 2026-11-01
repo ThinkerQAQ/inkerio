@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sitemap from "@astrojs/sitemap";
 import siteConfig from "./site.config.json" with { type: "json" };
+import { normalizeSiteFeatures } from "./src/lib/site-features.mjs";
+import { isLegacyRoute } from "./src/lib/legacy-routes.mjs";
 import { defineConfig } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import plantumlMarkdown from "./src/markdown/plantuml.mjs";
@@ -29,7 +31,7 @@ const excludedRoutes = new Set([
   "/english/",
 ]);
 const localizedNotesPrefixes = ["/en/notes/"];
-const legacyRedirectPrefixes = ["/notes/java-juc/", "/notes/category/java-juc/"];
+const legacyRedirects = normalizeSiteFeatures(siteConfig).legacyRedirects;
 
 function frontmatterValue(markdown, field) {
   const frontmatter = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? "";
@@ -111,7 +113,7 @@ export default defineConfig({
         return !excludedRoutes.has(route)
           && !noindexRoutes.has(defaultLanguageRoute)
           && (!localizedNotesPrefix || translatedNoteRoutes.has(route))
-          && !legacyRedirectPrefixes.some((prefix) => route.startsWith(prefix));
+          && !isLegacyRoute(route, legacyRedirects);
       },
     }),
   ],

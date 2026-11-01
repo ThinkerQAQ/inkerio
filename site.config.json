@@ -18,5 +18,21 @@
   "locale": "zh-CN",
   "commentsRepository": "",
   "publicSecurityIcon": "",
-  "descriptionEn": "A bilingual static blog powered by Inkerio."
+  "descriptionEn": "A bilingual static blog powered by Inkerio.",
+  "home": {
+    "hero": {
+      "zh": {
+        "title": "Inkerio",
+        "description": "一个由独立内容仓库驱动的双语博客。"
+      },
+      "en": {
+        "title": "Inkerio",
+        "description": "A bilingual blog powered by a separate content repository."
+      }
+    }
+  },
+  "rss": {
+    "timezone": "UTC",
+    "maxItems": 100
+  }
 }
