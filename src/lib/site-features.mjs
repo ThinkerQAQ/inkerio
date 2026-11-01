@@ -1,3 +1,5 @@
+import { normalizeSiteIntegrations } from "./site-integrations.mjs";
+
 // Build-time, owner-neutral site policy. All input is public configuration;
 // no credentials or mutable runtime state belong here.
 const object = (value, field) => {
@@ -150,6 +152,7 @@ export function normalizeSiteFeatures(config) {
     },
     noteTaxonomy,
     legacyRedirects: { exact, notePrefixes, categoryArchives },
+    integrations: normalizeSiteIntegrations(config.integrations),
   };
 }
 

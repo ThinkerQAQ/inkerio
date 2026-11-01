@@ -45,6 +45,10 @@ A site can also set `noteTaxonomy` to control the order on `/notes/` and English
 
 `appendedCategoryOrder` moves only the listed categories to the end, in that order; others retain the normal content-derived ordering. All translation maps are optional and fall back to the note's own labels (or the existing generic topic fallback). This does not change note IDs, translations or canonical URLs.
 
+## Optional integrations
+
+Set the `integrations` block in the site's public config to choose an Umami tracker, a custom public analytics script, and/or an HTTP reactions backend. The runtime is disabled without a configured provider and required public settings. **Legacy `PUBLIC_UMAMI_*` and `PUBLIC_REACTION_WORKER_URL` variables remain compatible**. For complete configuration, protocols, and self-hosted reference Workers see [integrations](integrations.md).
+
 ## RSS policy
 
 ```json

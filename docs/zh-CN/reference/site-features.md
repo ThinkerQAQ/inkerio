@@ -45,6 +45,10 @@ Inkerio 是通用博客引擎。首页分类、笔记分类顺序、RSS 策略�
 
 `appendedCategoryOrder` 仅将指定分类按顺序移动到笔记索引末尾，其余保留原有内容排序。英文翻译字典均可省略，缺少词条时使用笔记自身文字或通用后备标签，不改变笔记 ID 和原文链接。
 
+## 可选统计与点赞集成
+
+通过部署仓库公开配置的 `integrations` 字段，选择 Umami、其他统计脚本或兼容 HTTP 的点赞后端。缺少所需设置时默认关闭。旧的 `PUBLIC_UMAMI_*`、`PUBLIC_REACTION_WORKER_URL` 环境变量保持兼容。详细协议、自部署 Worker 与配置示例见[站点集成](integrations.md)。
+
 ## RSS 规则
 
 ```json

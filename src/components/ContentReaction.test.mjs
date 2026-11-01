@@ -112,6 +112,15 @@ test("reaction GET waits for viewport and keeps button disabled while state is u
   assert.equal(h.observer.disconnected, true);
 });
 
+test("reaction supports configured HTTP pathname without changing response protocol", async () => {
+  const h = harness(async () => ({ ok: true, json: async () => ({ reacted: false, count: 3 }) }));
+  h.root.dataset.apiPath = "/api/feedback";
+  h.observer.trigger();
+  await settle();
+  assert.match(h.calls[0].url, /^https:\/\/api\.example\/api\/feedback\?contentType=article&contentId=/);
+  assert.equal(h.count.textContent, "3");
+});
+
 test("timed-out GET fails silently without creating retry controls or modifying layout", async () => {
   const h = harness(async (_url, options) => new Promise((_resolve, reject) => {
     options.signal.addEventListener("abort", () => reject(new Error("aborted")));

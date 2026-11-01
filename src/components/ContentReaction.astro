@@ -1,6 +1,8 @@
 ---
 import type { Locale } from "../config/i18n";
 import { SITE } from "../config/site";
+import { SITE_FEATURES } from "../config/site-features";
+import { resolveReactionIntegration } from "../lib/site-integrations.mjs";
 
 interface Props {
   contentType: "article" | "note" | "fitness" | "life";
@@ -9,8 +11,12 @@ interface Props {
 }
 
 const { contentType, contentId, language = "zh" } = Astro.props;
-const endpoint = String(import.meta.env.PUBLIC_REACTION_WORKER_URL ?? "").replace(/\/+$/, "");
-const enabled = Boolean(endpoint);
+const reactionIntegration = resolveReactionIntegration(SITE_FEATURES.integrations.reactions, {
+  PUBLIC_REACTION_WORKER_URL: import.meta.env.PUBLIC_REACTION_WORKER_URL,
+});
+const enabled = Boolean(reactionIntegration);
+const endpoint = reactionIntegration?.endpoint ?? "";
+const apiPath = reactionIntegration?.apiPath ?? "/v1/reactions";
 const storageKey = SITE.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ":reaction-visitor:v1";
 const isChinese = language === "zh";
 const label = (contentType === "fitness" || contentType === "life") ? (isChinese ? "点赞" : "Like") : (isChinese ? "有帮助" : "Helpful");
@@ -24,6 +30,7 @@ const errorLabel = isChinese ? "暂时无法连接点赞服务，请重试。" :
     data-pagefind-ignore
     data-content-reaction
     data-endpoint={endpoint}
+    data-api-path={apiPath}
     data-content-type={contentType}
     data-content-id={contentId}
     data-storage-key={storageKey}
@@ -104,7 +111,7 @@ const errorLabel = isChinese ? "暂时无法连接点赞服务，请重试。" :
       const endpoint = root.dataset.endpoint;
       const contentType = root.dataset.contentType;
       const contentId = root.dataset.contentId;
-      const url = new URL("/v1/reactions", `${endpoint}/`);
+      const url = new URL(root.dataset.apiPath || "/v1/reactions", `${endpoint}/`);
       url.searchParams.set("contentType", contentType);
       url.searchParams.set("contentId", contentId);
 

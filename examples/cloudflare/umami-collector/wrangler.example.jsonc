@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "my-blog-umami-collector",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-14",
+  "vars": {
+    "ALLOWED_ORIGINS": "https://my-blog.example",
+    "ALLOWED_WEBSITE_IDS": "REPLACE_WITH_YOUR_PUBLIC_UMAMI_WEBSITE_ID"
+  }
+}
