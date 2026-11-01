@@ -47,7 +47,7 @@ export function prepareReadme(markdown, source) {
   return markdown.trim() + '\n';
 }
 
-function frontmatter(data, body = '') { return `---\n${stringify(data)}---\n\n${body}`; }
+function frontmatter(data, body = '') { return `---\n${stringify(data)}---\n\n${body}`.trimEnd() + '\n'; }
 function plainText(node) { return node.value ?? (node.children ?? []).map(plainText).join(''); }
 export function describeDocument(markdown, filename) {
   const tree = unified().use(remarkParse).parse(markdown);
