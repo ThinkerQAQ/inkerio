@@ -1,4 +1,5 @@
 ---
+import AskBlogSession from "../components/AskBlogSession.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import {
@@ -97,6 +98,11 @@ const socialImage = image ? new URL(image, SITE.url).toString() : undefined;
 const defaultAlternative = languageAlternatives.find(
   (alternative) => alternative.locale === DEFAULT_LOCALE,
 );
+// Optional feature adapters stay disabled unless a site explicitly opts in.
+// A deployed AI Search Worker or indexed content alone must never enable chat.
+const askBlogEnabled = import.meta.env.PUBLIC_ASK_BLOG_ENABLED === "true"
+  && Boolean(import.meta.env.PUBLIC_ASK_BLOG_WORKER_URL?.trim())
+  && Boolean(import.meta.env.PUBLIC_ASK_BLOG_TURNSTILE_SITE_KEY?.trim());
 const umamiWebsiteId = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
 const umamiDomain = new URL(SITE.url).hostname;
 const umamiProxyUrl = import.meta.env.PUBLIC_UMAMI_PROXY_ORIGIN?.trim();
@@ -164,6 +170,7 @@ if (umamiProxyUrl) {
       <slot />
     </main>
     <SiteFooter locale={locale} />
+    {askBlogEnabled && <AskBlogSession locale={locale} />}
     <script>
       import { initFloatingActionLayout } from "../lib/floating-actions-runtime.js";
 

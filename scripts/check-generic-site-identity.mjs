@@ -14,7 +14,7 @@ function visit(directory) {
       visit(name);
     } else if (entry.isFile() && /\.(?:astro|ts|js|mjs)$/.test(entry.name) && !/\.test\./.test(entry.name)) {
       const content = readFileSync(name, "utf8");
-      if (/thinkerqaq/i.test(content)) errors.push(path.relative(process.cwd(), name));
+      if (/thinkerqaq|__thinkerContentAnalytics/i.test(content)) errors.push(path.relative(process.cwd(), name));
     }
   }
 }
