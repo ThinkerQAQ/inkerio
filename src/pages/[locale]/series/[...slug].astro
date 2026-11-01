@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
+import DocumentationIndex from "../../../components/DocumentationIndex.astro";
 import ArticleList from "../../../components/ArticleList.astro";
 import NoteCategoryPreview from "../../../components/NoteCategoryPreview.astro";
 import { SERIES_UI } from "../../../config/i18n-features";
@@ -82,6 +83,7 @@ const relatedNoteScopes = series.data.relatedNoteScopes.flatMap((scope) => {
   }];
 });
 const relatedNoteGroups = [...relatedNoteCategories, ...relatedNoteScopes];
+const documents = await getCollection("documents");
 ---
 
 <BaseLayout
@@ -104,13 +106,13 @@ const relatedNoteGroups = [...relatedNoteCategories, ...relatedNoteScopes];
           )}
         </div>
       </header>
-      <section aria-label={seriesUi.articlesAriaLabel}>
+      {series.data.kind === "documentation" ? <DocumentationIndex series={series} documents={documents} locale={locale} /> : <section aria-label={seriesUi.articlesAriaLabel}>
         <ArticleList
           entries={localizedArticles}
           locale={locale}
           languageFallbackLabel={seriesUi.untranslatedArticle}
         />
-      </section>
+      </section>}
     </article>
     {relatedNoteGroups.length > 0 && (
       <section class="related-content series-reference-notes" aria-labelledby="reference-notes-heading">

@@ -166,6 +166,22 @@ const projects = defineCollection({
   }),
 });
 
+const documents = defineCollection({
+  loader: glob({
+    pattern: "**/*.md",
+    base: "./src/content/documents",
+    generateId: ({ entry }) => entry.replace(/\.md$/i, "").replaceAll("\\", "/"),
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    series: z.string(),
+    language: z.enum(SUPPORTED_LOCALES).default("zh"),
+    translationOf: z.string().optional(),
+    updatedAt: z.coerce.date(),
+  }),
+});
+
 const relatedNoteScope = z.object({
   category: z.string(),
   topicPath: z.array(z.string()).min(1),
@@ -185,6 +201,8 @@ const series = defineCollection({
     updatedAt: z.coerce.date(),
     featured: z.boolean().default(false),
     project: z.string().optional(),
+    kind: z.enum(["articles", "documentation"]).default("articles"),
+    relatedDocuments: z.array(z.string()).default([]),
     relatedArticles: z.array(z.string()).default([]),
     relatedNoteCategories: z.array(z.string()).default([]),
     relatedNoteScopes: z.array(relatedNoteScope).default([]),
@@ -238,4 +256,4 @@ const workoutSummaries = defineCollection({
   }).strict(),
 });
 
-export const collections = { pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };
+export const collections = { documents, pages, notes, noteTranslations, articles, projects, projectTranslations, series, life, workoutSummaries };

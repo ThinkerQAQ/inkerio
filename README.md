@@ -70,3 +70,10 @@ A custom domain is configured through GitHub Pages settings and the `url` field 
 **Live example:** [thinkerqaq.com](https://thinkerqaq.com/) runs on Inkerio. Its [ThinkerQAQ.github.io repository](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) shows a more advanced production architecture with separate content, a site wrapper, optional Workers, and GitHub Pages/EdgeOne deployment. It is a **reference implementation**, not the starter template. New users should start with the single-repository Content Template.
 
 **License:** Inkerio's original engine source is [MIT](LICENSE). Personal writing, photographs, content-template examples and third-party dependencies have separate rights; see [third-party notices](THIRD_PARTY_NOTICES.md). Production sites should pin a validated engine commit, not track a mutable branch without verification.
+
+
+### Project README and documentation series
+
+Project Markdown bodies are the project introductions; keep Chinese in `projects/` and English in `project-translations/en/`, separate from `articles/`. The page renders the introduction, GitHub links, then documentation series associated by `project` and `kind: documentation`. Manuals use the independent `documents` collection, and `relatedDocuments` on the series sets chapter order. Translations reference the Chinese root with `translationOf`. Chapters appear at `/series/<series>/docs/<document>/` with English equivalents, contents and previous/next navigation; they are excluded from article feeds.
+
+To refresh repository README snapshots, create `src/data/project-readmes.json` in your content repository with `projects` entries containing `id`, public `repository` (`owner/repo`), pinned 40-character `revision`, `files` (`zh`/`en` paths), and optional `routes` mapping repository paths to site URLs. Run `node scripts/sync-project-readmes.mjs --content-root /path/to/content`. Fetching completes before snapshot files change; builds and page visits then use those committed snapshots without GitHub requests. Relative links and images resolve against the pinned source; fenced code remains unchanged.

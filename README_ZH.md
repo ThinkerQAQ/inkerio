@@ -80,3 +80,10 @@ Inkerio 也支持在不使用 GitHub Pages 的情况下本地开发。执行 `np
 **实际案例（Live Example）：** [thinkerqaq.com](https://thinkerqaq.com/) 使用 Inkerio 构建，其 [ThinkerQAQ.github.io](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io) 仓库展示了更复杂的生产环境方案，包括独立内容仓库、网站部署包装层、Worker 及 GitHub Pages/EdgeOne。这是可参考的**生产实践**，不是要求新用户直接复制的建站模板。普通用户应优先使用单仓库内容模板。
 
 **版权：** Inkerio 原创引擎代码采用 [MIT](LICENSE)；用户文章、摄影、模板演示素材与第三方依赖各有不同的权利边界，详见 [第三方说明](THIRD_PARTY_NOTICES.md)。生产环境建议固定已经验证的引擎提交版本，避免不经验证地自动追踪 `main`。
+
+
+### 项目 README 与文档系列
+
+项目 Markdown 正文即项目介绍：中文放在 `projects/`，英文放在 `project-translations/en/`，与 `articles/` 分离。项目页依次展示介绍、GitHub 链接，以及通过 `project` 关联且设有 `kind: documentation` 的文档系列。手册使用独立的 `documents` 集合，由系列的 `relatedDocuments` 指定章节顺序；译文通过 `translationOf` 关联中文原文。章节路径为 `/series/<series>/docs/<document>/`（英文有对应路径），提供目录和上下篇导航，不进入文章订阅。
+
+如需同步仓库 README，在内容仓库创建 `src/data/project-readmes.json`，其中 `projects` 每项包含 `id`、公开 `repository`（`owner/repo`）、固定的 40 位提交 `revision`、`files`（`zh`/`en` 文件路径），以及可选的 `routes`（仓库文件到站内链接映射）。执行 `node scripts/sync-project-readmes.mjs --content-root /path/to/content`。所有来源下载成功后才更新正文；构建与页面访问直接使用提交的快照，不请求 GitHub。相对链接和图片按固定来源版本转换，代码块保持原样。

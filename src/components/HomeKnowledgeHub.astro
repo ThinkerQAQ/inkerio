@@ -107,7 +107,7 @@ const seriesItems = startSeries.map((series) => {
   const articleCount = seriesArticleCount(series);
   const relatedScopeCount = series.data.relatedNoteCategories.length + series.data.relatedNoteScopes.length;
   const firstScopeLabel = series.data.relatedNoteScopes[0]?.label;
-  const labelParts = [copy.articlesCount(articleCount)];
+  const labelParts = [series.data.kind === "documentation" ? (locale === "en" ? `${series.data.relatedDocuments.length} documents` : `${series.data.relatedDocuments.length} 篇文档`) : copy.articlesCount(articleCount)];
   if (firstScopeLabel && relatedScopeCount === 1) labelParts.push(firstScopeLabel);
   else if (relatedScopeCount > 0) labelParts.push(copy.relatedScope(relatedScopeCount));
 

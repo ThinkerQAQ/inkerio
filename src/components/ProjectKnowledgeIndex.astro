@@ -1,114 +1,29 @@
 ---
 import type { Locale } from "../config/i18n";
-import ArticleList from "./ArticleList.astro";
 import ProjectLinkList from "./ProjectLinkList.astro";
-import {
-  localizedSeriesSummary,
-  seriesHref,
-  seriesStatusLabel,
-  type ArticleEntry,
-  type ProjectEntry,
-  type SeriesEntry,
-} from "../lib/content";
-import { buildProjectKnowledge } from "../lib/project-relations";
+import { localizedSeriesSummary, seriesHref, type ProjectEntry, type SeriesEntry } from "../lib/content";
 
-interface Props {
-  project: ProjectEntry;
-  articles: ArticleEntry[];
-  seriesEntries: SeriesEntry[];
-  locale: Locale;
-}
-
-const { project, articles, seriesEntries, locale } = Astro.props;
-const knowledge = buildProjectKnowledge(project, locale, articles, seriesEntries);
-const ui = locale === "en"
-  ? {
-      articles: "Articles",
-      github: "GitHub",
-      tutorial: "Tutorial",
-      documentation: "Documentation",
-      series: "Related Series",
-      untranslatedArticle: "Chinese",
-      externalLink: "External link",
-    }
-  : {
-      articles: "文章",
-      github: "GitHub",
-      tutorial: "教程",
-      documentation: "文档",
-      series: "相关系列",
-      untranslatedArticle: undefined,
-      externalLink: "外部链接",
-    };
+interface Props { project: ProjectEntry; seriesEntries: SeriesEntry[]; locale: Locale }
+const { project, seriesEntries, locale } = Astro.props;
+const docs = seriesEntries.filter((entry) => entry.data.project === project.id && entry.data.kind === "documentation");
 ---
-
-{knowledge.articles.length > 0 && (
-  <section class="related-content" aria-labelledby="project-articles-heading">
-    <h2 id="project-articles-heading">{ui.articles}</h2>
-    <ArticleList
-      entries={knowledge.articles}
-      locale={locale}
-      languageFallbackLabel={ui.untranslatedArticle}
-    />
-  </section>
-)}
-
-{knowledge.github.length > 0 && (
+{project.data.github.length > 0 && (
   <section class="related-content" aria-labelledby="project-github-heading">
-    <h2 id="project-github-heading">{ui.github}</h2>
-    <ProjectLinkList entries={knowledge.github} />
+    <h2 id="project-github-heading">GitHub</h2>
+    <ProjectLinkList entries={project.data.github} />
   </section>
 )}
-
-{(knowledge.tutorials.length > 0 || knowledge.tutorialLinks.length > 0) && (
-  <section class="related-content" aria-labelledby="project-tutorial-heading">
-    <h2 id="project-tutorial-heading">{ui.tutorial}</h2>
-    {knowledge.tutorials.length > 0 && (
-      <ArticleList
-        entries={knowledge.tutorials}
-        locale={locale}
-        languageFallbackLabel={ui.untranslatedArticle}
-      />
-    )}
-    {knowledge.tutorialLinks.length > 0 && (
-      <ProjectLinkList entries={knowledge.tutorialLinks} label={ui.externalLink} />
-    )}
-  </section>
-)}
-
-{(knowledge.documentation.length > 0 || knowledge.documentationLinks.length > 0) && (
+{docs.length > 0 && (
   <section class="related-content" aria-labelledby="project-documentation-heading">
-    <h2 id="project-documentation-heading">{ui.documentation}</h2>
-    {knowledge.documentation.length > 0 && (
-      <ArticleList
-        entries={knowledge.documentation}
-        locale={locale}
-        languageFallbackLabel={ui.untranslatedArticle}
-      />
-    )}
-    {knowledge.documentationLinks.length > 0 && (
-      <ProjectLinkList entries={knowledge.documentationLinks} label={ui.externalLink} />
-    )}
-  </section>
-)}
-
-{knowledge.series.length > 0 && (
-  <section class="related-content" aria-labelledby="project-series-heading">
-    <h2 id="project-series-heading">{ui.series}</h2>
+    <h2 id="project-documentation-heading">{locale === "en" ? "Documentation" : "文档"}</h2>
     <ol class="content-list">
-      {knowledge.series.map((series) => {
-        const summary = localizedSeriesSummary(series, locale);
-        return (
-          <li>
-            <div class="content-list-main">
-              <a class="content-title" href={seriesHref(series, locale)}>{summary.title}</a>
-              <p>{summary.description}</p>
-            </div>
-            <div class="content-meta">
-              <span>{seriesStatusLabel(series.data.status, locale)}</span>
-            </div>
-          </li>
-        );
+      {docs.map((entry) => {
+        const translated = locale === "zh" || Boolean(entry.data.translations[locale]);
+        const summary = localizedSeriesSummary(entry, translated ? locale : "zh");
+        return <li><div class="content-list-main">
+          <a class="content-title" href={seriesHref(entry, translated ? locale : "zh")}>{summary.title}</a>
+          <p>{summary.description}</p>
+        </div><div class="content-meta"><span>{locale === "en" ? `${entry.data.relatedDocuments.length} documents` : `${entry.data.relatedDocuments.length} 篇文档`}</span></div></li>;
       })}
     </ol>
   </section>

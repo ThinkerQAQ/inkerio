@@ -35,7 +35,6 @@ const { locale, project, translation } = Astro.props;
 const { data } = project;
 const { Content } = await render(translation ?? project);
 const summary = localizedProjectSummary(project, locale);
-const articles = await getCollection("articles");
 const seriesEntries = await getCollection("series");
 ---
 
@@ -44,12 +43,13 @@ const seriesEntries = await getCollection("series");
   description={summary.description}
   canonicalPath={projectHref(project, locale)}
   locale={locale}
+  languageAlternatives={[{ locale: "zh", href: projectHref(project, "zh") }, ...(translation ? [{ locale, href: projectHref(project, locale) }] : [])]}
   noindex={!translation}
 >
   <div class="shell page detail-page">
-    <article>
+    <article data-pagefind-body data-pagefind-filter="type:Project">
       <header class="note-header detail-page-header">
-        <h1>{summary.title}</h1>
+        <h1 data-pagefind-meta="title">{summary.title}</h1>
         <p class="note-description">{summary.description}</p>
         <div class="note-meta">
           <span>{projectStatusLabel(data.status, locale)}</span>
@@ -60,7 +60,6 @@ const seriesEntries = await getCollection("series");
       <div class="prose" lang={translation ? LOCALES[locale].htmlLang : "zh-CN"}><Content /></div>
       <ProjectKnowledgeIndex
         project={project}
-        articles={articles}
         seriesEntries={seriesEntries}
         locale={locale}
       />

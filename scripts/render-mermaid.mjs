@@ -1,3 +1,4 @@
+import { contentDiagramRoute } from "./content-diagram-route.mjs";
 import { spawn, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, readdir, lstat, rm, unlink, writeFile } from "node:fs/promises";
@@ -15,7 +16,7 @@ const includeDrafts = process.env.INCLUDE_DRAFTS === "true";
 
 async function markdownFiles(directory) {
   const files = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
+  for (const entry of await readdir(directory, { withFileTypes: true }).catch((error) => { if (error.code === "ENOENT") return []; throw error; })) {
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...await markdownFiles(target));
     else if (entry.isFile() && entry.name.endsWith(".md")) files.push(target);
@@ -32,15 +33,13 @@ function visitMermaid(tree, callback) {
 
 export async function collectDiagrams() {
   const diagrams = new Map();
-  for (const collection of ["notes", "note-translations", "articles", "projects", "series"]) {
+  for (const collection of ["notes", "note-translations", "articles", "projects", "project-translations", "series", "documents"]) {
     const collectionRoot = path.join(ROOT, "src", "content", collection);
     for (const file of await markdownFiles(collectionRoot)) {
       const { content, frontmatter } = parseFrontmatter(await readFile(file, "utf8"), { frontmatter: "empty-with-lines" });
       const published = collection !== "articles" || frontmatter.status === "published" || includeDrafts;
       const id = path.relative(collectionRoot, file).replaceAll(path.sep, "/").replace(/\.md$/, "");
-      const route = collection === "note-translations"
-        ? "/" + (frontmatter.language || "en") + "/notes/" + (frontmatter.translationOf || id.replace(/^[^/]+\//, "")) + "/"
-        : "/" + collection + "/" + id + "/";
+      const route = contentDiagramRoute(collection, id, frontmatter);
       visitMermaid(parser.parse(content), (node) => {
         const origin = { file: path.relative(ROOT, file).replaceAll(path.sep, "/"), line: node.position?.start.line, route, published };
         let key;
