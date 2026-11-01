@@ -13,11 +13,13 @@ export function getStaticPaths() {
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
+const githubURL = new URL(SITE.github);
+const githubLabel = githubURL.host + githubURL.pathname.replace(/\/$/, "");
 ---
 
 <BaseLayout
   title="Contact"
-  description="Email ThinkerQAQ for technical discussions, article feedback, or collaboration."
+  description={`Contact ${SITE.author} about technical topics, writing, or collaboration.`}
   canonicalPath={localizePath(locale, "/contact/")}
   locale={locale}
 >
@@ -28,13 +30,15 @@ const { locale } = Astro.props;
     />
 
     <div class="prose">
-      <h2>Email</h2>
-      <p>
-        <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>
-      </p>
+      {SITE.contactEmail && (
+        <>
+          <h2>Email</h2>
+          <p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p>
+        </>
+      )}
       <h2>GitHub</h2>
       <p>
-        <a href={SITE.github}>github.com/ThinkerQAQ</a>
+        <a href={SITE.github}>{githubLabel}</a>
       </p>
       <p>
         For code or project-specific questions, you can also start a discussion in the relevant GitHub repository.

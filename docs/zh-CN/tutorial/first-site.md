@@ -11,7 +11,7 @@
 ```bash
 mkdir inkerio-workspace
 cd inkerio-workspace
-git clone https://github.com/ThinkerQAQ/ThinkerQAQ.github.io.git
+git clone https://github.com/ThinkerQAQ/inkerio.git
 git clone https://github.com/ThinkerQAQ/inkerio-content-template.git blog-content
 ```
 
@@ -22,13 +22,13 @@ git clone https://github.com/ThinkerQAQ/inkerio-content-template.git blog-conten
 先满足[快速开始的环境要求](../quick-start.md)，然后在引擎目录运行：
 
 ```bash
-cd ThinkerQAQ.github.io
+cd inkerio
 npm ci
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npx --no-install astro dev --port 4321
 ```
 
-打开 [localhost:4321](http://localhost:4321)。装配成功会输出 `[site] assembled content=`，页面中应显示模板内容。
+打开 [localhost:4321](http://localhost:4321)。装配成功会输出 `"operation":"assemble-content"` 与 `"status":"passed"`，页面中应显示模板内容。
 
 装配会替换引擎的 `src/content/`；内容仓库存在 `public/media/` 时也会替换对应媒体目录，有 manifest 时会一并复制。文章始终在内容仓库编辑，避免下一次装配丢失对生成文件的修改。
 
@@ -60,7 +60,7 @@ coverImageAlt: "内容模板提供的示例封面"
 保持开发服务运行，在另一个终端进入引擎根目录：
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 ```
 

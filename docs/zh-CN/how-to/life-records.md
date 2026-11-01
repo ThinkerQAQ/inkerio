@@ -65,7 +65,7 @@ Schema 严格限制字段：月份 `YYYY-MM`、训练天数 0–31，可选非�
 在引擎目录装配自己的内容：
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npx --no-install astro dev --port 4321
 ```
 

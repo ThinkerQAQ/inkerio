@@ -8,6 +8,6 @@ Choose the task you need to complete:
 - [Diagnose a local build](diagnose-build.md)
 - [Diagnose missing analytics](diagnose-analytics.md)
 - [Add photography and workout records](life-records.md)
-- [Use BlogCTL and browser publishing](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/guide/workflows.md)
+- SyndiRelay
 
 For a complete first run, follow the [tutorial](../tutorial/first-site.md). Exact field definitions are in the [reference](../reference/index.md).

@@ -49,7 +49,7 @@ npx --no-install astro dev --port 4321
 | `npm run check` | Astro、TypeScript 和内容集合诊断 |
 | `npm run build` | 页面、图表、URL 清单与 Pagefind |
 | `npm run test:docs` | Markdown 本地链接目标 |
-| `go run ./tools/blogctl/cmd/maint verify` | BlogCTL Go 测试、npm 安装、文档、扩展语法和公开边界 |
+| `npm run test:engine` | 内容装配、公开边界、内容安全和核心交互逻辑 |
 | `npm test` | 更完整的引擎测试、模板装配、检查与构建 |
 
 `npm test` 会选择公开模板。验证个人内容时，应显式装配，再运行 `check` 和 `build`。部署错误见 [Pages 排查表](deploy.md#常见失败)。

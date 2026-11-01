@@ -12,20 +12,20 @@ Content collections ──► Astro build ──► static pages
            Pagefind index   SEO/RSS          Browser integrations
                                │              ├── Umami analytics
                          IndexNow/GSC         ├── utterances comments
-                         (BlogCTL)            └── Reactions Worker
+                         (site-specific CI)            └── Reactions Worker
                   Optional AI Search Worker (separate retrieval pipeline)
 ```
 
 ## Core distinction
 
 - **Pagefind** is generated from built HTML as part of the site build. The [site search UI](../../src/pages/search.astro) and [index builder](../../scripts/build-pagefind.mjs) are its entry points.
-- **Search-engine discovery** uses sitemaps, canonical metadata and BlogCTL search submission/notification, with [Go search commands](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/cmd/search.go) and [CI notification](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/.github/workflows/deploy.yml).
+- **Search-engine discovery** uses sitemaps, canonical metadata and optional SyndiRelay search submission/notification, with configuration in the site wrapper and [CI notification](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/.github/workflows/deploy.yml).
 - **AI Search** uses a separate content preparation/sync process and Cloudflare Worker. The backend and release workflow can exist without an exposed Ask Blog UI; do not infer public feature status from backend source alone.
 - **Umami** is injected conditionally by [BaseLayout](../../src/layouts/BaseLayout.astro) through `PUBLIC_UMAMI_WEBSITE_ID` and `PUBLIC_UMAMI_PROXY_ORIGIN`. The [browser analytics-control page](../../src/pages/disable-analytics.astro) is a separate user-facing route.
 - **Comments** use [utterances integration](../../src/components/ContentComments.astro); **helpful reactions** use [ContentReaction](../../src/components/ContentReaction.astro) with the separately configured [Reactions Worker](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/workers/blog-reactions/README.md).
 
 ## Implementation boundary
 
-`workers/` runs the independent services. EdgeOne Makers serves the built static site; browser integrations use their configured Worker origin. No runtime credential belongs in static build assets.
+Site-specific `workers/` live in the deployment wrapper, not the reusable engine. EdgeOne Makers serves the built static site; browser integrations use their configured Worker origin. No runtime credential belongs in static build assets.
 
 For source paths and configuration keys use [Integrations Reference](../reference/integrations.md). For deployment details use [Deployment Reference](../reference/deployment.md).

@@ -22,7 +22,7 @@ Images belong in `public/media/`; content uses `/media/...` URLs. `src/data/cont
 
 `pages/about.md` and `pages/en/about.md` provide `/about/` and `/en/about/`. Their frontmatter requires `title`, `description`, `seoDescription`, and `language` (`zh` or `en`). The body is standard Markdown. The engine renders it and supplies the layout and SEO; a missing locale is a build error.
 
-`site/copyright.json` is a regular JSON configuration file, **not** an Astro collection. The content assembler copies it into the engine's generated `src/content/`. It requires `zh` and `en` objects with `title`, `notice` (article/note/Life detail), `photo` (Life indexes), `syndication` (BlogCTL), and `source` (original-link label). The About copyright paragraph is a human-readable summary of this policy, not a separate license.
+`site/copyright.json` is a regular JSON configuration file, **not** an Astro collection. The content assembler copies it into the engine's generated `src/content/`. It requires `zh` and `en` objects with `title`, `notice` (article/note/Life detail), `photo` (Life indexes), `syndication` (external syndication), and `source` (original-link label). The About copyright paragraph is a human-readable summary of this policy, not a separate license.
 
 ## Articles
 

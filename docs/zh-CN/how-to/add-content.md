@@ -8,7 +8,7 @@
 4. 在引擎根目录运行：
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 npx --no-install astro dev --port 4321
 ```
@@ -19,7 +19,7 @@ npx --no-install astro dev --port 4321
 
 更新已发布文章时保留 ID 和 `publishedAt`；有实质修订时设置 `updatedAt`，仅调整格式不必改日期。原文和图片提交到内容仓库；需要检查最终渲染和关联时，装配后执行 `npm run build`。
 
-网站部署和站外文章更新分别进行，按需查看[部署指南](deploy.md)和 [BlogCTL 分发教程](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/zh-CN/tutorial/first-publish.md)。
+网站部署和站外文章更新分别进行，按需查看[部署指南](deploy.md)和 SyndiRelay。
 
 ## 首页的笔记展示
 

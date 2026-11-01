@@ -91,7 +91,7 @@ The English URL is `/en/notes/system-design-map/`; the original is `/notes/syste
 From the Inkerio engine directory:
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../blog-content
+node scripts/assemble-content.mjs --content-root ../blog-content
 npm run check
 npx --no-install astro dev --port 4321
 ```

@@ -7,7 +7,7 @@ npm ci
 npm run dev:quick
 ```
 
-首次运行会优先使用引擎同级的 `../inkerio-content-template`；若尚未克隆，就从公开 GitHub 仓库克隆。BlogCTL 装配示例到引擎的忽略目录 `src/content/`、`public/media/` 后交给 Astro 渲染，不会读取或修改私人 BlogContent。
+首次运行会优先使用引擎同级的 `../inkerio-content-template`；若尚未克隆，就从公开 GitHub 仓库克隆。Inkerio 内置 Node.js 装配脚本将示例装配到引擎的忽略目录 `src/content/`、`public/media/` 后交给 Astro 渲染，不会读取或修改私人 BlogContent。
 
 完整构建（如果内容中使用图表，则还需要 Java/Graphviz 等依赖）：
 
@@ -15,6 +15,6 @@ npm run dev:quick
 npm run build:template
 ```
 
-需要指定其他模板路径，可设置环境变量 `BLOG_TEMPLATE_ROOT`。使用真实的私有内容时，应显式运行 `go run ./tools/blogctl/cmd site assemble --content-root /path/to/BlogContent`，随后执行 `npm run dev:site`，避免重新装配模板。
+需要指定其他模板路径，可设置环境变量 `BLOG_TEMPLATE_ROOT`。使用真实的私有内容时，应显式运行 `node scripts/assemble-content.mjs --content-root /path/to/BlogContent`，随后执行 `npm run dev:site`，避免重新装配模板。
 
 模板新增了**软件系统设计思维导图**中英文示例：中文 `/notes/sample-mindmap/`、英文 `/en/notes/sample-mindmap/`。示例采用 Markdown 层级和 `defaultView: mindmap`，两种语言都可切换 Markdown / 思维导图，详见[思维导图笔记教程](../how-to/mindmap-notes.md)。

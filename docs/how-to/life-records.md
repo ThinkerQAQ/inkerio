@@ -82,7 +82,7 @@ The public content template supplies one, four, nine and twelve-image photo albu
 For real content:
 
 ```bash
-go run ./tools/blogctl/cmd site assemble --content-root ../BlogContent
+node scripts/assemble-content.mjs --content-root ../BlogContent
 npm run dev:site
 ```
 

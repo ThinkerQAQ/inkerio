@@ -14,11 +14,11 @@
 
 - **Core:** canonical content assembly and static site output have stable ownership.
 - **Extensions:** platform publishers, search adapters, diagram renderers and EdgeOne integration can change independently.
-- **Configuration:** BlogCTL `blogctl.toml` and environment/CI settings select providers without hardcoding secrets.
-- **Self-hosting:** Native Go maintenance commands implement build/verify/package; the engine can assemble independent public demo content without private services.
+- **Configuration:** `site.config.json` and CI environment variables define site identity and optional providers without hardcoded secrets.
+- **Self-hosting:** Node.js scripts assemble/build/validate a public demo without private services.
 
 ## Example
 
-A new remote publishing platform should reuse the existing BlogCTL adapter contract and mature HTTP/SDK support. Do not duplicate authentication, asset handling or retry state. Verify a real remote draft readback before declaring write support.
+Remote publishing adapters belong in independent SyndiRelay; never introduce third-party login sessions, browser automation or platform credentials into the engine.
 
-**Documentation boundary:** keep design decisions and relevant tradeoffs under Architecture, system models under Concepts, and supported CLI/configuration under Reference. Inkerio and BlogCTL retain separate documentation entrypoints; link shared workflows instead of duplicating them.
+**Documentation boundary:** keep design decisions and relevant tradeoffs under Architecture, system models under Concepts, and supported CLI/configuration under Reference. Inkerio and SyndiRelay retain separate documentation entrypoints; link shared workflows instead of duplicating them.

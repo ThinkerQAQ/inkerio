@@ -8,6 +8,6 @@
 - [排查本地构建失败](diagnose-build.md)
 - [排查 Umami 无数据](diagnose-analytics.md)
 - [添加摄影与健身记录](life-records.md)
-- [使用 BlogCTL 与浏览器分发](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/zh-CN/guide/workflows.md)
+- SyndiRelay
 
 首次完整操作见[站点教程](../tutorial/first-site.md)，准确字段定义见[参考手册](../reference/index.md)。

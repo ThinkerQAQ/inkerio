@@ -9,7 +9,7 @@ Prepare a site-specific `site.config.json` and copy it to the Inkerio engine roo
 | Field | Purpose |
 | --- | --- |
 | `title`, `homeTitle`, `homeTitleEn` | Site title and localized homepage titles |
-| `description`, `author`, `authorProfilePath` | SEO description and author identity |
+| `description`, `descriptionEn`, `author`, `authorProfilePath` | SEO description and author identity |
 | `url` | HTTPS canonical origin, used by Astro and structured data |
 | `github`, `profiles`, `repository` | Public identity links and repository |
 | `contactEmail` | Optional contact address |
@@ -34,7 +34,7 @@ Some generic labels in [localization configuration](../../src/config/i18n.ts) ar
 - Reactions: `PUBLIC_REACTION_WORKER_URL` requires your own service.
 - AI assistant: optional external Worker; the reusable engine does not deploy or distribute one.
 
-Publishing articles to other platforms belongs to [BlogCTL](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl), not to the engine. Its URL/canonical settings are separate from this site's `site.config.json`.
+Publishing articles to other platforms belongs to the separate SyndiRelay product, not to Inkerio. Its URL/canonical settings are independent of `site.config.json`.
 
 ## Verify
 

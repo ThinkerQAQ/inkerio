@@ -1,44 +1,36 @@
 # How content becomes a website
 
-Inkerio turns a separately versioned content repository into a bilingual static website. BlogCTL assembles the build inputs and also provides a separate route for publishing articles to external platforms.
+Inkerio turns a separately versioned content repository into a bilingual static website. It assembles the content itself and does not require a Go program or a publishing platform account.
 
 ## Data flow
 
 ```mermaid
 flowchart TD
-  C["Content repository"] --> A["BlogCTL assembly"]
-  A --> I["Engine content and media"]
-  I --> B["Astro build and Pagefind"]
-  B --> D["Static hosting"]
-  C --> P["BlogCTL article compiler"]
-  P --> R["External publishing platforms"]
+  C["Content repository"] --> A["Inkerio content assembler"]
+  S["Site configuration"] --> B["Astro static build and Pagefind"]
+  A --> B
+  B --> D["Static hosting via deployment wrapper"]
+  C -.-> P["Optional independent SyndiRelay"]
+  P -.-> R["External publishing platforms"]
 ```
 
-The public [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) supplies sample content. For your own site, create a content repository from it. The engine repository retains its existing name, `ThinkerQAQ.github.io`.
+The public [inkerio-content-template](https://github.com/ThinkerQAQ/inkerio-content-template) supplies demonstration content. For your own site, create a separate content repository from the template. See the [tutorial](../tutorial/first-site.md).
 
 ## Ownership
 
 | Part | Owns |
 | --- | --- |
-| Content repository | Markdown, translations, source media, workout records and optional content manifest |
+| Content repository | Markdown, translations, source media, workout records, pages/About, copyright policy and optional manifest |
 | Engine `src/` and `astro.config.mjs` | Routes, layouts, metadata, SEO, RSS and collection schemas |
-| `tools/blogctl/` | Assembly, article compilation, asset processing, publishing, indexing and browser Bridge |
-| `scripts/` and `src/markdown/` | Diagram rendering and site build support |
-| `.github/workflows/` | Build, release and deployment orchestration |
-| `workers/` | Separately configured tracking, reports, reactions and optional AI retrieval |
+| Engine `scripts/` and `src/markdown/` | Content assembly, diagram rendering and static build support |
+| Engine `.github/workflows/` | Public sample validation without private credentials |
+| Site deployment wrapper | Site identity, verification assets, private content access, hosting, Workers and optional search notifications |
+| SyndiRelay (separate private project) | Optional off-site publication, article compilation, Bridge, MCP, browser integration and related search tools |
 
-Assembly replaces generated `src/content/` in the engine. When source media is present it replaces the corresponding engine media tree. The original content checkout is not modified. Edit and commit writing there; engine upgrades and repeated assemblies can then regenerate the website inputs.
+Run `node scripts/assemble-content.mjs --content-root ../your-content-repo` in the engine root. This copies the source into ignored generated directories. Edit and commit writing in the content checkout, never the assembled copy. The static build writes `dist/` including Pagefind indexes, without requiring an online Go/Astro server at runtime.
 
-The [tutorial](../tutorial/first-site.md) follows this separation using two local checkouts. Built output lives in `dist/`, including Pagefind indexes. Static hosts serve those files; they do not need a running Go or Astro server.
+## Search, integrations and deployment
 
-## Search and publishing
+Pagefind runs locally in the browser. Optional AI Search, Cloudflare Workers, analytics, comments and external publication require per-site configuration. They are not enabled merely by cloning Inkerio. Publishing copies of articles to external platforms is **not** part of `npm run build`.
 
-Pagefind searches the built website in the browser. Optional AI Search uploads selected public content to Cloudflare and supports retrieval separately; disabling Ask Blog does not disable Pagefind.
-
-A site build does not publish articles to third-party accounts. BlogCTL publishing compiles selected source articles for each platform and uses explicitly selected creation/update targets. The Extension supplies browser-controlled account access; the local Bridge runs jobs and records outcomes. See [BlogCTL workflows](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/blob/main/tools/blogctl/docs/guide/workflows.md).
-
-## Deployment configuration
-
-The checked-in workflows describe the author's Pages and EdgeOne deployment, including owner guards and optional cloud services. A fork needs its own identity, content access and hosting settings; see [customization](../how-to/customize-site.md) and [deployment](../how-to/deploy.md).
-
-See [integrations](search-and-integrations.md) for comments and browser services, and [architecture principles](../architecture/principles.md) for extension decisions.
+In production, a site-specific deployment repository pins Inkerio and content revisions, overlays `site.config.json`, and deploys the `dist/` output. The ThinkerQAQ website is one example of this architecture. See [deployment](../how-to/deploy.md) and [integrations](search-and-integrations.md).

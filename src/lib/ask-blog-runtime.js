@@ -20,8 +20,8 @@ export function initAskBlog(root) {
   const turnstileContainer = root.querySelector("[data-turnstile-container]");
   const markdownParser = unified().use(remarkParse);
 
-  const CONVERSATION_KEY = `thinkerqaq:ask-blog:conversation:${locale}:v2`;
-  const SECURITY_KEY = "thinkerqaq:ask-blog:security-session:v1";
+  const CONVERSATION_KEY = `inkerio:ask-blog:conversation:${locale}:v2`;
+  const SECURITY_KEY = "inkerio:ask-blog:security-session:v1";
   const MAX_STORED_MESSAGES = 12;
   const MAX_HISTORY_MESSAGES = 6;
   const MAX_HISTORY_CHARS = 9000;

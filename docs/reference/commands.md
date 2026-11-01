@@ -13,4 +13,4 @@ This standalone engine no longer requires Go or BlogCTL.
 | `npm run build:template` | Assemble public template and build |
 | `npm run preview` | Preview static output |
 
-External syndication belongs to [BlogCTL](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl).
+External syndication is maintained separately by SyndiRelay; it is not an engine command.

@@ -13,4 +13,4 @@
 | `npm run build:template` | 示例内容完整构建 |
 | `npm run preview` | 预览构建成果 |
 
-第三方平台分发属于独立的 [BlogCTL](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/tools/blogctl)，不在引擎命令范围内。
+第三方平台分发由独立的 SyndiRelay 维护，不属于引擎命令。

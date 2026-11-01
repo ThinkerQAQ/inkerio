@@ -1,6 +1,6 @@
 # 从个人部署仓库构建 Inkerio
 
-**Inkerio 只负责引擎，不直接负责个人站点的生产部署。** 新引擎 CI 只使用公开 Content Template；原 ThinkerQAQ 网站暂时继续使用[旧部署工作流](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/.github/workflows/)，未经验证不切换。
+**Inkerio 只负责引擎，不直接负责个人站点的生产部署。** 新引擎 CI 只使用公开 Content Template；ThinkerQAQ 生产站点现已由[独立部署仓库](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/.github/workflows/)固定 Inkerio 引擎版本，并部署至 GitHub Pages 与 EdgeOne。
 
 ## 部署所需输入
 
@@ -24,7 +24,7 @@
 
 GitHub Pages 需在仓库 Settings → Pages 中选择 GitHub Actions，工作流按官方方式配置上传与部署权限。引擎自身的验证工作流**不会**发布网站。
 
-## 切换生产前的验收
+## 生产升级前的验收
 
 使用**相同内容提交**分别构建新旧引擎，核对页面路由、canonical/hreflang、RSS、Sitemap、结构化数据、摄影素材、搜索结果与重点文章，再决定切换。保留旧工作流或提交用于回滚。
 

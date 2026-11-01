@@ -6,6 +6,6 @@ Inkerio 是构建引擎，不直接管理个人网站的生产部署。
 
 个人站点需由独立集成仓库固定 Inkerio 的版本和内容库的提交，再注入站点配置文件和静态资源，调用引擎完成装配与构建。
 
-原有 ThinkerQAQ 网站的自动部署仍保留在[旧仓库工作流](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/.github/workflows/)中，未切换至新引擎。
+ThinkerQAQ 网站已通过[独立部署仓库](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io/tree/main/.github/workflows/)构建固定版本的 Inkerio，并使用隔离的权限访问私有内容。
 
 生产切换流程参见[迁移方案](../../architecture/repository-boundaries.md)。
