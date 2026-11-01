@@ -2,14 +2,14 @@
 
 [English](README.md)
 
-- [1. 简介](#1-简介)
+- [1. Introduction](#1-introduction)
 - [2. Quick Start](#2-quick-start)
-- [3. 使用](#3-使用)
-- [4. 常见问题](#4-常见问题)
-- [5. 开发](#5-开发)
-- [6. 许可证](#6-许可证)
+- [3. Configuration](#3-configuration)
+- [4. Optional Features](#4-optional-features)
+- [5. Development](#5-development)
+- [6. License](#6-license)
 
-## 1. 简介
+## 1. Introduction
 
 Inkerio 是基于 Astro 的双语博客引擎，支持 Markdown 文章、笔记、思维导图、项目和摄影，以及全文搜索、RSS 和站点地图。
 
@@ -18,6 +18,10 @@ Inkerio 是基于 Astro 的双语博客引擎，支持 Markdown 文章、笔记�
 [线上示例](https://thinkerqaq.com/) · [部署源码](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io)
 
 ## 2. Quick Start
+
+下面以发布自己的 GitHub Pages 博客为例，从创建仓库到打开网站，完成第一次使用。
+
+需要一个 GitHub 账号。构建在 GitHub Actions 中完成。
 
 ### 2.1. 创建博客仓库
 
@@ -45,19 +49,7 @@ Owner 选择自己的账号，仓库名填写 `YOUR_USERNAME.github.io`，用户
 
 ### 2.3. 替换示例内容
 
-替换或删除模板中的示例，按原有目录结构添加自己的内容：
-
-| 博客仓库中的路径 | 内容 |
-| --- | --- |
-| `src/content/articles/` | 文章 |
-| `src/content/notes/`、`src/content/note-translations/` | 笔记及译文 |
-| `src/content/series/` | 文章系列 |
-| `src/content/projects/` | 项目 |
-| `src/content/life/` | 摄影与生活记录 |
-| `src/content/workout-summaries/` | 运动月报 |
-| `src/content/pages/about.md`、`src/content/pages/en/about.md` | 中英文 About 页面 |
-| `public/media/` | 图片等媒体 |
-| `src/content/site/copyright.json` | 中英文版权声明 |
+替换或删除模板中的示例，按 [3.2](#32-内容目录) 的目录结构添加自己的内容。
 
 可以参考示例 Markdown 的格式编写自己的内容，保留必需的 frontmatter 字段。同时修改两份 About 和版权配置，替换或删除虚构运动记录、演示照片。
 
@@ -72,19 +64,58 @@ Owner 选择自己的账号，仓库名填写 `YOUR_USERNAME.github.io`，用户
 
 工作流会安装依赖、检查配置与内容、构建网站，并使用 GitHub 内置权限完成部署。
 
-访问 **https://YOUR_USERNAME.github.io/**，检查首页、文章、图片和 `/en/` 英文首页。
+### 2.5. 检查网站
 
-## 3. 使用
+访问自己的站点，例如 `https://alice.github.io/`，检查首页、文章和图片，再打开 `https://alice.github.io/en/` 检查英文首页。
 
-### 3.1. 更新内容
+### 2.6. 常见问题
 
-在博客仓库修改 Markdown 或图片，提交到 `main` 后，工作流会重新构建并发布。
+| 问题 | 处理方式 |
+| --- | --- |
+| 部署提示存在示例内容 | 按报错路径替换或删除全部示例，包括媒体、About 和版权配置，然后重新提交 |
+| 网站配置校验失败 | 替换占位符，核对 `url` 与实际网站地址 |
+| 没有部署任务 | 将 Pages 发布源设为 GitHub Actions，手动运行部署工作流 |
+| 本地看到的还是示例内容 | 配置自己的站点并通过 `--content-root ../my-blog` 装配；`npm run dev:quick` 加载的是演示模板 |
+| 本地修改没有生效 | 重新装配内容并重启预览 |
+| 本地图表渲染失败 | 参考模板部署工作流安装对应依赖；CI 已配置构建环境 |
 
-公开仓库中的未发布源文件也可以被他人查看。私人草稿和密钥应保存在仓库之外。
+如果仍无法解决，请[提交 Issue](https://github.com/ThinkerQAQ/inkerio/issues)，附上运行失败的步骤、错误信息，以及使用的引擎提交。日志中的密钥和私人内容请先脱敏。
 
-### 3.2. 本地预览
+## 3. Configuration
 
-准备 Git、Node.js **22.12+** 和 npm。将引擎与自己的博客克隆到同一个父目录：
+### 3.1. 网站配置
+
+在自己的博客仓库中编辑 `site.config.json`，提交到 `main` 后生效。
+
+| 字段 | 用途 |
+| --- | --- |
+| `title` | 网站名称 |
+| `author` | 作者名称 |
+| `url` | 网站的 HTTPS 根地址，例如 `https://alice.github.io` |
+| `description` | 中文简介 |
+| `descriptionEn` | 英文简介 |
+
+### 3.2. 内容目录
+
+| 博客仓库中的路径 | 内容 |
+| --- | --- |
+| `src/content/articles/` | 文章 |
+| `src/content/notes/`、`src/content/note-translations/` | 笔记及译文 |
+| `src/content/series/` | 文章系列 |
+| `src/content/projects/` | 项目 |
+| `src/content/life/` | 摄影与生活记录 |
+| `src/content/workout-summaries/` | 运动月报 |
+| `src/content/pages/about.md`、`src/content/pages/en/about.md` | 中英文 About 页面 |
+| `public/media/` | 图片等媒体 |
+| `src/content/site/copyright.json` | 中英文版权声明 |
+
+在这些目录中修改 Markdown 或图片，提交到 `main` 后自动发布。公开仓库中的未发布源文件也可以被他人查看，私人草稿和密钥应保存在仓库之外。
+
+## 4. Optional Features
+
+### 4.1. Case 1：本地预览与构建
+
+准备 Git、Node.js 和 npm，Node.js 版本与 [CI 配置](.github/workflows/ci.yml)保持一致。将引擎与自己的博客克隆到同一个父目录：
 
 ```bash
 mkdir inkerio-workspace
@@ -98,7 +129,7 @@ node scripts/assemble-content.mjs --content-root ../my-blog
 npx --no-install astro dev --port 4321
 ```
 
-打开 http://localhost:4321。修改内容后重新执行装配命令；修改网站配置后，还需要重新执行配置命令。
+打开 `http://localhost:4321`。修改内容后，先按 Ctrl+C 停止预览，重新执行装配命令，再启动预览。修改网站配置后，还需要重新执行配置命令。
 
 需要本地构建时，停止预览，在引擎目录执行：
 
@@ -108,13 +139,13 @@ npm run build
 npm run preview
 ```
 
-打开 http://localhost:4321 检查构建结果。图表渲染可能需要 Java、Graphviz 和浏览器依赖，模板部署工作流会在 CI 中安装这些依赖。
+打开 `http://localhost:4321` 检查构建结果。图表渲染可能需要 Java、Graphviz 和浏览器依赖，模板部署工作流会在 CI 中安装这些依赖。
 
-### 3.3. 绑定独立域名
+### 4.2. Case 2：绑定独立域名
 
 将 `site.config.json` 的 `url` 改为自己的 HTTPS 域名，在 **Settings → Pages → Custom domain** 中配置域名，并按照 [GitHub 自定义域名指南](https://docs.github.com/zh/pages/configuring-a-custom-domain-for-your-github-pages-site)设置 DNS。提交配置并重新部署。
 
-### 3.4. CLI 与 MCP
+### 4.3. Case 3：通过 CLI 或 MCP 操作引擎
 
 在引擎目录执行：
 
@@ -128,24 +159,13 @@ CLI 还支持 `assemble`、`check`、`build`、`diagrams`、`routes` 和 `previe
 
 MCP 客户端的启动命令设为 `node`，参数填写 `.inkerio-tools/mcp.js` 的绝对路径，并通过 `INKERIO_CONTENT_ROOT` 指定博客仓库。需要使用文件写入工具时，再设置 `INKERIO_MCP_ALLOW_MUTATIONS=1`。
 
-### 3.5. 可选集成
+### 4.4. Case 4：接入统计或文章分发
 
 访问统计、点赞和评论按需接入。需要将文章分发到其他平台时，[SyndiRelay](https://github.com/ThinkerQAQ/syndirelay)可以直接读取同一份内容仓库。
 
 [实际部署仓库](https://github.com/ThinkerQAQ/ThinkerQAQ.github.io)展示了独立内容仓库、Worker 和 GitHub Pages/EdgeOne 部署方式。初次使用可以从单仓库内容模板开始。
 
-## 4. 常见问题
-
-| 问题 | 处理方式 |
-| --- | --- |
-| 部署提示存在示例内容 | 按报错路径替换或删除全部示例，包括媒体、About 和版权配置，然后重新提交 |
-| 网站配置校验失败 | 替换占位符，核对 `url` 与实际网站地址 |
-| 没有部署任务 | 将 Pages 发布源设为 GitHub Actions，手动运行部署工作流 |
-| 本地看到的还是示例内容 | 配置自己的站点并通过 `--content-root ../my-blog` 装配；`npm run dev:quick` 加载的是演示模板 |
-| 本地修改没有生效 | 重新装配内容并重启预览 |
-| 本地图表渲染失败 | 参考模板部署工作流安装对应依赖；CI 已配置构建环境 |
-
-## 5. 开发
+## 5. Development
 
 在引擎目录执行：
 
@@ -161,6 +181,6 @@ npm run build:template
 
 模板工作流固定了引擎提交。升级已有博客时，修改 `.github/workflows/deploy.yml` 中的引擎 `ref`，指向已验证的提交，并检查构建结果。
 
-## 6. 许可证
+## 6. License
 
 原创引擎代码采用 [MIT](LICENSE)。用户文章、摄影、模板示例及第三方依赖适用各自的许可，详见[第三方说明](THIRD_PARTY_NOTICES.md)。
