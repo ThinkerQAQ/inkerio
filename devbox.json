@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.19.0/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs@22"
+  ],
+  "shell": {
+    "scripts": {
+      "setup": "npm ci",
+      "test": "npm run test:assembler",
+      "build": "npm run build:template"
+    }
+  }
+}

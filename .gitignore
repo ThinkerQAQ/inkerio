@@ -31,3 +31,8 @@ site.config.local.json
 
 # Compiled local CLI / MCP outputs.
 .inkerio-tools/
+
+# Local Devbox and Python development state
+.devbox/
+.venv/
+__pycache__/
