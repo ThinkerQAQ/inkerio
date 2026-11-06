@@ -49,6 +49,12 @@ test('no owner config defaults to content-derived categories and no legacy redir
   assert.deepEqual(resolveKnowledgeSections(null, [{ category: 'mytopic', entries: [{ data: { categoryLabel: '我的专题' } }] }], 'zh').map(s => s.entries[0].label), ['我的专题']);
 });
 
+test('life routes can be disabled without affecting reusable default behavior', () => {
+  assert.equal(normalizeSiteFeatures(base).life.enabled, true);
+  assert.equal(normalizeSiteFeatures({ ...base, life: { enabled: false } }).life.enabled, false);
+  assert.throws(() => normalizeSiteFeatures({ ...base, life: { enabled: 'false' } }), /life.enabled must be a boolean/);
+});
+
 test('site defined section order, translations, and empty category filtering', () => {
   const v = normalizeSiteFeatures(realLike);
   const groups = [{ category: 'photography', entries: [{}] }, { category: 'java', entries: [{}, {}] }];
