@@ -1,6 +1,7 @@
 ---
 import { DEFAULT_LOCALE, LOCALES, localizePath, type Locale, type LocaleAlternative } from "../config/i18n";
 import { SITE } from "../config/site";
+import { SITE_FEATURES } from "../config/site-features";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 
 interface Props {
@@ -20,7 +21,7 @@ const navItems = [
   { href: localizePath(locale, "/projects/"), label: localeInfo.nav.projects },
   { href: localizePath(locale, "/series/"), label: localeInfo.nav.series },
   { href: localizePath(locale, "/notes/"), label: localeInfo.nav.notes },
-  { href: localizePath(locale, "/life/"), label: localeInfo.nav.life },
+  ...(SITE_FEATURES.life.enabled ? [{ href: localizePath(locale, "/life/"), label: localeInfo.nav.life }] : []),
   { href: localizePath(locale, "/about/"), label: localeInfo.nav.about },
 ] as const;
 const searchHref = localizePath(locale, "/search/");
