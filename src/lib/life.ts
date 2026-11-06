@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { localizePath, type Locale, type LocaleAlternative } from "../config/i18n";
+import { SITE_FEATURES } from "../config/site-features";
 
 export type LifeEntry = CollectionEntry<"life">;
 export const LIFE_PAGE_SIZE = 10;
@@ -45,6 +46,7 @@ export interface LifeIndexData {
 export type LifePageData = LifeIndexData | { kind: "record"; entry: LifeEntry; alternatives: LocaleAlternative[] };
 
 export async function getLifePaths(locale: Locale) {
+  if (!SITE_FEATURES.life.enabled) return [];
   const entries = await getLifeEntries(locale);
   const counterparts = new Map((await getLifeEntries(locale === "zh" ? "en" : "zh")).map((entry) => [lifeSlug(entry), entry]));
   const years = [...new Set(entries.map(lifeYear))].sort().reverse();
