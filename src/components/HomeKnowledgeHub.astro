@@ -32,7 +32,7 @@ interface Props {
 }
 
 const { locale } = Astro.props;
-const latestLife = (await getLifeEntries(locale)).slice(0, 1);
+const latestLife = SITE_FEATURES.life.enabled ? (await getLifeEntries(locale)).slice(0, 1) : [];
 
 const copy = locale === "en"
   ? {
