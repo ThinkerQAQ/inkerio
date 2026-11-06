@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import { localizePath, type Locale } from "../config/i18n";
+import { SITE_FEATURES } from "../config/site-features";
 
 export type WorkoutSummary = CollectionEntry<"workoutSummaries">;
 
@@ -60,6 +61,7 @@ export async function getWorkoutSummaries(): Promise<WorkoutSummary[]> {
 }
 
 export async function getWorkoutPaths(locale: Locale) {
+  if (!SITE_FEATURES.life.enabled) return [];
   const summaries = await getWorkoutSummaries();
   const latestMonth = summaries[0]?.data.month;
   const defaultMonth = latestMonth ?? new Intl.DateTimeFormat("en-CA", {
