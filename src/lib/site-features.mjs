@@ -75,6 +75,7 @@ export function normalizeSiteFeatures(config) {
     });
   }
 
+  const life = config.life === undefined ? {} : object(config.life, 'life');
   const rss = config.rss === undefined ? {} : object(config.rss, 'rss');
   const optionalDate = (value, kind, field) => {
     if (value === undefined || value === null) return null;
@@ -139,6 +140,7 @@ export function normalizeSiteFeatures(config) {
   }
   return {
     home: { hero: heroCopy, knowledgeSections },
+    life: { enabled: boolean(life.enabled, 'life.enabled', true) },
     rss: {
       maxItems: integer(rss.maxItems, 'rss.maxItems', 100, 1, 1000),
       photoSince: optionalDate(rss.photoSince, 'date', 'rss.photoSince'),
